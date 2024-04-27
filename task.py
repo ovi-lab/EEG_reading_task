@@ -30,7 +30,7 @@ sound_playing = False
 
 
 
-def math_task(question_stim,answer_left_stim, answer_right_stim, fixation, win, kb, auds, is_bg_sound):
+def reading_task(question_stim,answer_left_stim, answer_right_stim, fixation, win, kb, auds, is_bg_sound):
 
     np.random.seed(7)
     sound_ind = np.random.binomial(1, 0.2, 10000)
