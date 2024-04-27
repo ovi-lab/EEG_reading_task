@@ -146,7 +146,7 @@ def main():
     auds = [aud1, aud2]
 
 
-    odd_sound_count = math_task(question_stim,answer_left_stim, answer_right_stim, fixation, win, kb, auds, is_bg_sound = True )
+    odd_sound_count = reading_task(question_stim,answer_left_stim, answer_right_stim, fixation, win, kb, auds, is_bg_sound = True )
 
 
     print("count is " + str(odd_sound_count))
