@@ -30,12 +30,28 @@ sound_playing = False
 
 
 
-def reading_task(question_stim,answer_left_stim, answer_right_stim, fixation, win, kb, auds, is_bg_sound):
+def reading_task(passage_stim, fixation, win, kb, auds, is_bg_sound):
 
     np.random.seed(7)
     sound_ind = np.random.binomial(1, 0.2, 10000)
 
-    df = pd.read_excel('conditions_math_task_v1.xlsx')
+    full_text = []
+
+    with open('Text0.txt') as f:
+        for line in f:
+            for word in line.split():
+                full_text.append(word)
+                
+    sentences = []
+    word_count = 50
+    start = 0
+    end = 0
+    for i in range(0, int(len(full_text)/ word_count )):
+        end = end + word_count if end + word_count < len(full_text) else len(full_text)
+        text_range = full_text[start: end ]
+        sentence = ' '.join(text_range)
+        sentences.append(sentence)
+        start =  end
 
     globalClock = core.Clock()  # to track the time since experiment started
     routineTimer = core.Clock()  # to track time remaining of each (possibly non-slip) routine 
@@ -44,10 +60,10 @@ def reading_task(question_stim,answer_left_stim, answer_right_stim, fixation, wi
 
     continueRoutine = True
     # routineForceEnded = False
-    number_of_trials = df.shape[0]
+    number_of_pages = len(sentences)
 
-    current_trial_number = 0
-    past_trial_number = -1
+    current_page_number = 0
+    past_page_number = -1
     audio_iter = 0
     sound_playing = False
 
@@ -75,22 +91,17 @@ def reading_task(question_stim,answer_left_stim, answer_right_stim, fixation, wi
                 sound_playing = False
 
 
-        if (past_trial_number <  current_trial_number):
-            thisTrial = df.iloc[current_trial_number]
-            question_stim.setText(thisTrial['question'])
-            answer_left_stim.setText(thisTrial['left_answer'])
-            answer_right_stim.setText(thisTrial['right_answer'])
-            correct_side = thisTrial['correct_side']
+        if (past_page_number <  current_page_number):
+            thisText = sentences[current_page_number]
+            passage_stim.setText(thisText)
 
-            question_stim.draw()
-            answer_left_stim.draw()
-            answer_right_stim.draw()
+            passage_stim.draw()
             win.flip()
 
-            past_trial_number += 1  
+            past_page_number += 1  
 
         # check and handle keyboard and mouse  
-        keys = kb.getKeys(keyList = ['left','right','escape'], clear =True)
+        keys = kb.getKeys(keyList = ['space','escape'], clear =True)
 
         if(keys):
             resp = keys[0].name #take first response
@@ -98,25 +109,13 @@ def reading_task(question_stim,answer_left_stim, answer_right_stim, fixation, wi
 
             if resp=='escape':
                 continueRoutine = False
-                # trials.finished = True
-
-            if correct_side == 'right' and resp=='right':
-                corr = 1
-            elif correct_side == 'left' and resp=='left':
-                corr = 1
-            else:
-                corr = 0
-
-            # trials.addData('resp', resp)
-            # trials.addData('rt', rt)
-            # trials.addData('corr', corr) 
 
             kb.clearEvents()
             kb.clock.reset()  
 
-            current_trial_number += 1
+            current_page_number += 1
 
-        if current_trial_number == number_of_trials:
+        if current_page_number == number_of_pages:
             continueRoutine = False
 
     return count
@@ -133,9 +132,7 @@ def main():
         lineColor = 'white', fillColor = 'lightGrey')
 
 
-    question_stim =  visual.TextStim(win, height = 0.2, pos= (0.0, 0.5))
-    answer_left_stim =  visual.TextStim(win, height = 0.2, pos= (-0.75, -0.5))
-    answer_right_stim =  visual.TextStim(win, height = 0.2,  pos= (0.75, -0.5))
+    passage_stim =  visual.TextStim(win, height = 0.1, pos= (0.0, 0.0))
 
     #Auditory stimuli
     # Initialize stimuli
@@ -146,7 +143,7 @@ def main():
     auds = [aud1, aud2]
 
 
-    odd_sound_count = reading_task(question_stim,answer_left_stim, answer_right_stim, fixation, win, kb, auds, is_bg_sound = True )
+    odd_sound_count = reading_task(passage_stim,fixation, win, kb, auds, is_bg_sound = True )
 
 
     print("count is " + str(odd_sound_count))
