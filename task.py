@@ -151,3 +151,8 @@ def main():
 
 
 main()
+
+
+# http://openvibe.inria.fr/stimulation-codes/
+# http://openvibe.inria.fr/tcp-tagging/
+# https://gitlab.inria.fr/openvibe/extras/-/blob/master/contrib/plugins/server-extensions/tcp-tagging/client-example/tcp-tagging-client.py
