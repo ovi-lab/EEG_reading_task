@@ -177,19 +177,22 @@ def reading_task(passage_stim, fixation, win, kb, auds, is_bg_sound):
     return count
 
 def main():
-    #then creating a window is another single line. We’ll use units of pixels for the window for simplicity. Then all our stimulus dimensions will be in pixels:
+    #then creating a window is another single line. We’ll use units of pixels
+    # for the window for simplicity. Then all our stimulus dimensions 
+    # will be in pixels:
     win = visual.Window([1920,1080], fullscr=True, units='norm',  screen=1)
     win.mouseVisible = False
 
     # create a default keyboard (e.g. to check for escape)
 
 
-    fixation = visual.Circle(win, size = 0.01,
+    fixation = visual.Circle(win, size = 0.01,\
         lineColor = 'white', fillColor = 'lightGrey')
 
 
     passage_stim =  visual.TextBox(win, size = (0.9, 0.9), font_size = 32, \
-                                   pos= (0.0, 0.0), grid_vert_justification='center'
+                                   pos= (0.0, 0.0), \
+                                   grid_vert_justification='center' \
                                    , font_color=[1,1,1])
 
     #Auditory stimuli
