@@ -188,7 +188,9 @@ def main():
         lineColor = 'white', fillColor = 'lightGrey')
 
 
-    passage_stim =  visual.TextStim(win, height = 0.1, pos= (0.0, 0.0))
+    passage_stim =  visual.TextBox(win, size = (0.9, 0.9), font_size = 32, \
+                                   pos= (0.0, 0.0), grid_vert_justification='center'
+                                   , font_color=[1,1,1])
 
     #Auditory stimuli
     # Initialize stimuli
