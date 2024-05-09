@@ -2025,6 +2025,22 @@ suggested = ["Phidget22", "badapted (>=0.0.3)", "egi-pynetstation (>=0.0.0rc1)",
 tests = ["flake8", "pytest (>=6.2.5)", "pytest-asyncio", "pytest-codecov", "pytest-cov", "xmlschema"]
 
 [[package]]
+name = "psychopy-sounddevice"
+version = "0.0.1"
+description = "Extension for using SoundDevice for audio playback."
+optional = false
+python-versions = ">=3.7"
+files = [
+    {file = "psychopy-sounddevice-0.0.1.tar.gz", hash = "sha256:fbd6bcdaf3650a9b862fd95f970657a18c865b87df4ae684a6ff8dd13de82cb6"},
+    {file = "psychopy_sounddevice-0.0.1-py3-none-any.whl", hash = "sha256:b09b06995ea9e95a8701f7400b2359c5865e2599f94c744b17082781e1a7b410"},
+]
+
+[package.dependencies]
+numpy = "*"
+sounddevice = "*"
+soundfile = "*"
+
+[[package]]
 name = "psychtoolbox"
 version = "3.0.19.0"
 description = "Pieces of Psychtoolbox-3 ported to CPython."
@@ -4983,6 +4999,26 @@ files = [
 ]
 
 [[package]]
+name = "sounddevice"
+version = "0.4.6"
+description = "Play and Record Sound with Python"
+optional = false
+python-versions = ">=3.7"
+files = [
+    {file = "sounddevice-0.4.6-py3-none-any.whl", hash = "sha256:5de768ba6fe56ad2b5aaa2eea794b76b73e427961c95acad2ee2ed7f866a4b20"},
+    {file = "sounddevice-0.4.6-py3-none-macosx_10_6_x86_64.macosx_10_6_universal2.whl", hash = "sha256:8b0b806c205dd3e3cd5a97262b2482624fd21db7d47083b887090148a08051c8"},
+    {file = "sounddevice-0.4.6-py3-none-win32.whl", hash = "sha256:e3ba6e674ffa8f79a591d744a1d4ab922fe5bdfd4faf8b25069a08e051010b7b"},
+    {file = "sounddevice-0.4.6-py3-none-win_amd64.whl", hash = "sha256:7830d4f8f8570f2e5552942f81d96999c5fcd9a0b682d6fc5d5c5529df23be2c"},
+    {file = "sounddevice-0.4.6.tar.gz", hash = "sha256:3236b78f15f0415bdf006a620cef073d0c0522851d66f4a961ed6d8eb1482fe9"},
+]
+
+[package.dependencies]
+CFFI = ">=1.0"
+
+[package.extras]
+numpy = ["NumPy"]
+
+[[package]]
 name = "soundfile"
 version = "0.12.1"
 description = "An audio library based on libsndfile, CFFI and NumPy"
@@ -5551,4 +5587,4 @@ testing = ["coverage (>=5.0.3)", "zope.event", "zope.testing"]
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.9,<3.11"
-content-hash = "ec6f6e82c4e63ace0e86e1ff047c152ac3e965f42b5fd6747e65bc96bc64c53f"
+content-hash = "974e5bdf66b6d13545f4f6acd50ef2735c9c39159a4129ccecbe94d871190e99"

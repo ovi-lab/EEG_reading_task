@@ -1,9 +1,60 @@
 import threading
+from psychopy import prefs
+prefs.hardware['audioLib'] = ['ptb']
+
 from psychopy import visual, event, core, data, gui, sound 
+import psychtoolbox as ptb
 #at the start of your script
 from psychopy.hardware import keyboard
+
 import numpy as np
 import pandas as pd
+
+### tcp tagging stuff
+import sys
+import socket
+from time import time, sleep
+
+# host and port of tcp tagging server
+HOST = '127.0.0.1'
+PORT = 15361
+
+# Event identifier (See stimulation codes in OpenVibe documentation)
+EVENT_ID = 5+0x8100
+
+# Artificial delay (ms). It may need to be increased if the time to send the tag is too long and causes tag loss.
+DELAY=0
+
+# transform a value into an array of byte values in little-endian order.
+def to_byte(value, length):
+    for x in range(length):
+        yield value%256
+        value//=256
+
+# connect 
+s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+s.connect((HOST, PORT))
+
+
+
+def sendTcpTag(event):
+    padding=[0]*8
+    event_id=list(to_byte(event, 8))
+
+    # timestamp can be either the posix time in ms, or 0 to let the acquisition server timestamp the tag itself.
+    # timestamp=list(to_byte(int(time()*1000)+DELAY, 8))
+    timestamp=list(to_byte(int(0*1000)+DELAY, 8))
+
+    # send tag and sleep
+    s.sendall(bytearray(padding+event_id+timestamp))
+    sleep(1)
+
+
+### tcp tagging stuff
+
+# Event identifier (See stimulation codes in OpenVibe documentation)
+EVENT_ID = 5+0x8100
+
 
 
 info = {} #a dictionary
@@ -17,8 +68,8 @@ info['fixTime'] = 0.2 # seconds
 info['dateStr'] = data.getDateStr() #will create str of current date/time
 filename = "data/" + info['participant'] + "_" + info['dateStr']
 
-sound_duration = 0.3
-sound_iti = 0.7
+sound_duration = 0.2
+sound_iti = 1.5
 volume = 1
 sound_playing = False
 
@@ -32,6 +83,8 @@ sound_playing = False
 
 def reading_task(passage_stim, fixation, win, kb, auds, is_bg_sound):
 
+    sendTcpTag(EVENT_ID)
+
     np.random.seed(7)
     sound_ind = np.random.binomial(1, 0.2, 10000)
 
@@ -43,7 +96,7 @@ def reading_task(passage_stim, fixation, win, kb, auds, is_bg_sound):
                 full_text.append(word)
                 
     sentences = []
-    word_count = 50
+    word_count = 80
     start = 0
     end = 0
     for i in range(0, int(len(full_text)/ word_count )):
@@ -76,7 +129,7 @@ def reading_task(passage_stim, fixation, win, kb, auds, is_bg_sound):
         if(is_bg_sound): 
             if np.mod(globalClock.getTime(), sound_iti) < sound_duration:
                 if (not sound_playing):
-                    auds[sound_ind[audio_iter - 1]].stop()
+                    # auds[sound_ind[audio_iter - 1]].stop()
                     sound_type  = sound_ind[audio_iter]
                     auds[sound_type].play()
 
@@ -88,7 +141,9 @@ def reading_task(passage_stim, fixation, win, kb, auds, is_bg_sound):
 
             
             else:
-                sound_playing = False
+                if (sound_playing):
+                    auds[sound_ind[audio_iter - 1]].stop()
+                    sound_playing = False
 
 
         if (past_page_number <  current_page_number):
@@ -116,6 +171,7 @@ def reading_task(passage_stim, fixation, win, kb, auds, is_bg_sound):
             current_page_number += 1
 
         if current_page_number == number_of_pages:
+            sendTcpTag(EVENT_ID)
             continueRoutine = False
 
     return count
@@ -126,7 +182,7 @@ def main():
     win.mouseVisible = False
 
     # create a default keyboard (e.g. to check for escape)
-    kb = keyboard.Keyboard(backend='ptb')
+
 
     fixation = visual.Circle(win, size = 0.01,
         lineColor = 'white', fillColor = 'lightGrey')
@@ -136,12 +192,17 @@ def main():
 
     #Auditory stimuli
     # Initialize stimuli
-    aud1 = sound.Sound("C", octave=5, sampleRate=44100, secs=sound_duration)
-    aud1.setVolume(volume)
-    aud2 = sound.Sound("D", octave=6, sampleRate=44100, secs=sound_duration)
-    aud2.setVolume(volume)
+    # aud1 = sound.backend_ptb.SoundPTB(value='C', octave= 5, sampleRate=44100, secs=sound_duration )
+    # aud2 = sound.backend_ptb.SoundPTB(value='D', octave= 6, sampleRate=44100, secs=sound_duration )
+
+
+    aud1 = sound.Sound("C", octave=5, sampleRate=44100, secs=sound_duration, volume = 1.0)
+    # aud1.setVolume(volume)
+    aud2 = sound.Sound("D", octave=6, sampleRate=44100, secs=sound_duration, volume = 1.0)
+    # aud2.setVolume(volume)
     auds = [aud1, aud2]
 
+    kb = keyboard.Keyboard(backend='ptb')
 
     odd_sound_count = reading_task(passage_stim,fixation, win, kb, auds, is_bg_sound = True )
 
