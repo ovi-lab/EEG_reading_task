@@ -42,21 +42,20 @@ routineTimer = core.Clock()
 timeStamp=core.getAbsTime()
 today=datetime.date.today()
 
-data_results_filename = "math_data/"+ "data_" + PID + "_" + data.getDateStr() 
-tone_results_file_name = "tones/" + "tones_" + PID + "_" + data.getDateStr() 
-qa_results_file_name = "qa/" + "tones_" + PID + "_" + data.getDateStr() 
+data_results_filename = "data/reading_data/"+ "data_" + PID + "_" + data.getDateStr() 
+tone_results_file_name = "data/tones/" + "tones_" + PID + "_" + data.getDateStr() 
+qa_results_file_name = "data/qa/" + "tones_" + PID + "_" + data.getDateStr() 
 
 df_data = pd.DataFrame(columns=['PID', 'Date','Timestamp', 'BlockNo', \
-                                'BlockType', 'Paragraph_id', 'Reading_time',\
-                                    'CorrectAns', 'Correct'])
+                                'BlockType', 'Paragraph_id', 'Reading_time'])
 
 df_tones = pd.DataFrame(columns=['PID', 'Date','Timestamp', 'BlockNo',\
                                   'BlockType', 'KeyPressed', 'CorrectAns', \
                                     'Correct'])
 
 df_qa = pd.DataFrame(columns=['PID', 'Date','Timestamp', 'BlockNo', \
-                              'BlockType', 'Paragraph_id',  'KeyPressed', \
-                                'CorrectAns', 'Correct'])
+                              'BlockType', 'Paragraph_id', 'Question_id',\
+                                  'KeyPressed', 'CorrectAns', 'Correct'])
 
 
 # monitor setup
@@ -273,7 +272,7 @@ def extract_sentences(path, word_count):
         start =  end
     return sentences
 
-def block(win, test_type, path, block_type, block_number):
+def block(win, test_type, path, block_type, block_number, paragraph_id):
 
     global df_data, df_tones, df_qa, word_count_per_frame 
 
@@ -329,56 +328,48 @@ def block(win, test_type, path, block_type, block_number):
                 thisText = sentences[current_page_number]
                 passage_stim.setText(thisText)
 
-                print("Hahahahahaaha 01")
-
                 passage_stim.draw()
                 win.flip()
 
                 past_page_number += 1  
 
-                # check and handle keyboard and mouse  
-                keys = kb.getKeys(keyList = ['space', 'escape'], clear =True)
+            # check and handle keyboard and mouse  
+            keys = kb.getKeys(keyList = ['space', 'escape'], clear =True)
 
-                print("Hahahahahaaha 02")
-                if (keys):
-                    print([k.name for k in keys])
-                if(keys):
-                    resp = keys[0].name #take first response
-                    rt = keys[0].rt
+            if (keys):
+                print([k.name for k in keys])
+            if(keys):
+                resp = keys[0].name #take first response
 
-                    if resp=='escape':
-                        continueInnerLoop = False
-                        continueOuterLoop = False
-                        # save(test_type)
-                        win.close()
+                if resp=='escape':
+                    continueInnerLoop = False
+                    continueOuterLoop = False
+                    win.close()
 
-                    if resp=='space':
-                        print("Hahahahahaaha 03")  
-                        current_page_number += 1
+                if resp=='space':
+                    current_page_number += 1
         
 
-                    kb.clearEvents()
-                    kb.clock.reset()
-                    
-                    print("Hahahahahaaha 04")  
+                kb.clearEvents()
+                kb.clock.reset()
+                
 
                    
 
-                if ((current_page_number == number_of_pages)):
-                    continueInnerLoop = False
-                    mouse.mouseClock.reset()
-                    prevButtonState = mouse.getPressed()
-                    textbox.reset()
-                    textbox.setText('0')
-                    
-                    if (test_type == 'Test'):
-                        new_row = {'PID':PID, 'Date':today, 'Timestamp': timeStamp, 'BlockNo':block_number, 'BlockType': block_type,  'TrialNo': current_trial_number, 'KeyPressed':  resp ,'RT': rt,  'CorrectAns':  correct_side, 'Correct': corr }
-                        # df_data = pd.concat([df_data, new_row], ignore_index=True)
-                        df_data = df_data.append(new_row, ignore_index=True)
+            if ((current_page_number == number_of_pages)):
+                continueInnerLoop = False
+                mouse.mouseClock.reset()
+                prevButtonState = mouse.getPressed()
+                textbox.reset()
+                textbox.setText('0')
+                
+                if (test_type == 'Test'):
+                    new_row = {'PID':PID, 'Date':today, 'Timestamp': timeStamp, 'BlockNo':block_number, 'BlockType': block_type,  'Paragraph_id': paragraph_id,'Reading_time': globalClock.getTime() }
+                    # df_data = pd.concat([df_data, new_row], ignore_index=True)
+                    df_data = df_data.append(new_row, ignore_index=True)
 
-                    print("Hahahahahaaha 05")  
-                    core.wait(3) 
-    '''
+                core.wait(1) 
+
         # Text box to enter the "ODD" sound count
         if(block_type == 'D'): 
 
@@ -428,42 +419,37 @@ def block(win, test_type, path, block_type, block_number):
             df_tones = df_tones.append(new_row, ignore_index=True)
         
     return count
-    '''
-    return 1
+
 
 
 def experimentScreen(win):
 
-    '''
+    
     expIntBlkInterval = 'One minute mandatory break'
     expIntro =' Press a key to begin the block'
     
     
     # reads from a condition file
-    df_block_setup = pd.read_excel('conditions/block_conditions.xlsx')
+    df_block_setup = pd.read_excel('conditions\conditions.xlsx')
 
-    # block order 
-    if ( block == '[\'ND\',\'D\', \'ND\',\'D\']'):
-        first_D_block = df_block_setup.iloc[0]
-        df_block_setup.drop([0], inplace = True)
-        df_block_setup = df_block_setup.append(first_D_block)
-
+    #todo: do a group by for PID
     number_of_blocks = df_block_setup.shape[0]
 
 
     for index, row in df_block_setup.iterrows():
 
         instructionScreen(win, expIntro , 'anykey')
+        path = 'passages/' +  row["Paragraph_id"] + '.txt' 
 
-        # block(win, 'Test', row["block_condition_file_path"], row["block_type"], block_number = index)
-        block(win, 'Test', row["block_condition_file_path"], row["block_type"], block_number = index)
+        # block(win, 'Test', row["block_condition_file_path"], row["block_type"], block_numclearber = index)
+        block(win, 'Test', path , row["Block_type"], block_number = index,  paragraph_id = row["Paragraph_id"])
                 
         if not ((index +1) == number_of_blocks): 
             expIntBlkIntervalToText = visual.TextStim(win, text= expIntBlkInterval, pos=[0, 0], wrapWidth=1.6, color='black')  
             expIntBlkIntervalToText.draw()
             win.flip()
             core.wait(60)
-            '''
+         
     
      # add logic to iterate though passages
     # todo: try to save all the passages in a excel and shuffle
@@ -473,12 +459,13 @@ def experimentScreen(win):
     # df = pd.read_excel(file_path)
     # shuffle the passages 
 
-    path = 'Text0.txt'
-    block(win, 'Practice', path, 'D', block_number = None)
-
     return True  
 
-
+def save():
+    global df_data, df_tones 
+    if (df_data.shape[0] > 0 and df_tones.shape[0] > 0):
+        df_data.to_csv(data_results_filename + ".csv", encoding='utf-8', index=False)
+        df_tones.to_csv(tone_results_file_name + ".csv", encoding='utf-8', index=False)
 
 def runExperiment(win):
 
