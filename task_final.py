@@ -127,18 +127,6 @@ answers_stim =  visual.TextBox(win, size = (1, 1), font_size = 32,
                                    , font_color=[1,1,1])
 
 
-                                 
-# answers_stim =  visual.TextStim(win, height = 0.2, pos= (0.0, 0.25), \
-#                                  color='black')
-# answer_A =  visual.TextStim(win, height = 0.2, pos= (-0.75, 0.25), \
-#                             color='black')
-# answer_B =  visual.TextStim(win, height = 0.2,  pos= (0.75, -0.5), \
-#                             color='black')
-# answer_C =  visual.TextStim(win, height = 0.2,  pos= (0.75, -0.5), \
-#                             color='black')
-# answer_D =  visual.TextStim(win, height = 0.2,  pos= (0.75, -0.5), \
-#                             color='black')
-
 # host and port of tcp tagging server
 HOST = '127.0.0.1'
 PORT = 15361
@@ -176,7 +164,6 @@ def sendTcpTag(event):
     # send tag and sleep
     s.sendall(bytearray(padding+event_id+timestamp))
     sleep(1)
-
 
 
 
@@ -240,7 +227,8 @@ def introScreen(win):
     instructionScreen(win, ins2, 'space')
     
     
-    ins3aToText = visual.TextStim(win, text= ins3a, pos=[0, 0], wrapWidth=1.6, color='black')
+    ins3aToText = visual.TextStim(win, text= ins3a, pos=[0, 0], wrapWidth=1.6,\
+                                   color='black')
     ins3aToText.draw()
     win.flip()
     core.wait(1)
@@ -249,7 +237,8 @@ def introScreen(win):
     aud1.stop()
 
 
-    ins3bToText = visual.TextStim(win, text= ins3b, pos=[0, 0], wrapWidth=1.6, color='black')  
+    ins3bToText = visual.TextStim(win, text= ins3b, pos=[0, 0], wrapWidth=1.6,\
+                                   color='black')  
     ins3bToText.draw()
     win.flip()
     core.wait(1)    
@@ -257,7 +246,8 @@ def introScreen(win):
     core.wait(1)
     aud2.stop()
 
-    ins3cToText = visual.TextStim(win, text= ins3c, pos=[0, 0], wrapWidth=1.6, color='black')  
+    ins3cToText = visual.TextStim(win, text= ins3c, pos=[0, 0], wrapWidth=1.6,\
+                                   color='black')  
     ins3cToText.draw()
     win.flip()
     core.wait(3)
@@ -275,7 +265,8 @@ def extract_sentences(path, word_count):
     start = 0
     end = 0
     for i in range(0, int(len(full_text)/ word_count )):
-        end = end + word_count if end + word_count < len(full_text) else len(full_text)
+        end = end + word_count if end + word_count < len(full_text) else \
+            len(full_text)
         text_range = full_text[start: end ]
         sentence = ' '.join(text_range)
         sentences.append(sentence)
@@ -351,6 +342,7 @@ def block(win, test_type, path, block_type, block_number, paragraph_id):
                     continueInnerLoop = False
                     continueOuterLoop = False
                     win.close()
+                    core.quit()
 
                 if resp=='space':
                     current_page_number += 1
@@ -370,7 +362,11 @@ def block(win, test_type, path, block_type, block_number, paragraph_id):
                 textbox.setText('0')
                 
                 if (test_type == 'Test'):
-                    new_row = {'PID':PID, 'Date':today, 'Timestamp': timeStamp, 'BlockNo':block_number, 'BlockType': block_type,  'Paragraph_id': paragraph_id,'Reading_time': globalClock.getTime() }
+                    new_row = {'PID':PID, 'Date':today, \
+                               'Timestamp': timeStamp, 'BlockNo':block_number,\
+                                  'BlockType': block_type,  \
+                                    'Paragraph_id': paragraph_id,\
+                                        'Reading_time': globalClock.getTime() }
                     # df_data = pd.concat([df_data, new_row], ignore_index=True)
                     df_data = df_data.append(new_row, ignore_index=True)
 
@@ -417,10 +413,14 @@ def block(win, test_type, path, block_type, block_number, paragraph_id):
         if (textbox.text.isdigit()) and (count == int(textbox.text)):
             corr = 1 
 
-        logging.info( test_type +' - Actual Count: ' + str(count) +' , User Count: ' + str(textbox.text))  # info, error      
+        logging.info( test_type +' - Actual Count: ' + str(count) +'\
+                      , User Count: ' + str(textbox.text))  # info, error      
 
         if (test_type == 'Test'):
-            new_row = {'PID':PID, 'Date':today, 'Timestamp': timeStamp, 'BlockNo':block_number, 'BlockType': block_type,  'KeyPressed':  textbox.text ,  'CorrectAns':  count, 'Correct': corr }
+            new_row = {'PID':PID, 'Date':today, 'Timestamp': timeStamp,\
+                        'BlockNo':block_number, 'BlockType': block_type, \
+                              'KeyPressed':  textbox.text , \
+                                  'CorrectAns':  count, 'Correct': corr }
             # df_tones = pd.concat([df_tones, new_row], ignore_index=True)
             df_tones = df_tones.append(new_row, ignore_index=True)
 
@@ -440,13 +440,12 @@ def questionsScreen(win, test_type, block_type,
     current_question_number = 0
     past_question_number = -1
 
-    print("Hahahaa 1")
+    kb.clearEvents()
+    kb.clock.reset()
     core.wait(1) 
     while(continueInnerLoop):
 
         if(past_question_number < current_question_number):
-
-            print("Hahahaa 2")
 
             df_item =  df_comp_questions.iloc[current_question_number]
             question_stim.setText(df_item['Question'])
@@ -458,18 +457,17 @@ def questionsScreen(win, test_type, block_type,
             win.flip()
 
             past_question_number +=1
-            print("Hahahaa 3")
 
 
         keys = kb.getKeys(keyList = ['a','b','c','d', 'escape'], clear =True)
 
         if(keys):
-            print("Hahahaa 4")
             resp = keys[0].name #take first response
 
             if resp=='escape':
                 continueInnerLoop = False
                 win.close()
+                core.quit()
 
 
             corr = 0
@@ -477,7 +475,12 @@ def questionsScreen(win, test_type, block_type,
                 corr = 1
 
             if (test_type == 'Test'):
-                new_row = {'PID':PID, 'Date':today, 'Timestamp': timeStamp, 'BlockNo':block_number, 'BlockType': block_type,  'Paragraph_id': paragraph_id, 'Question_id': df_item['Question_id'], 'KeyPressed':  resp ,  'CorrectAns':  correct_ans, 'Correct': corr }
+                new_row = {'PID':PID, 'Date':today, 'Timestamp': timeStamp,\
+                            'BlockNo':block_number, 'BlockType': block_type, \
+                                  'Paragraph_id': paragraph_id,\
+                                      'Question_id': df_item['Question_id'], \
+                                        'KeyPressed':  resp ,  'CorrectAns': \
+                                              correct_ans, 'Correct': corr }
                 # df_data = pd.concat([df_data, new_row], ignore_index=True)
                 df_qa = df_qa.append(new_row, ignore_index=True)
 
@@ -512,32 +515,30 @@ def experimentScreen(win):
         instructionScreen(win, expIntro , 'anykey')
         path = 'passages/' +  row["Paragraph_id"] + '.txt' 
 
-        # block(win, 'Test', row["block_condition_file_path"], row["block_type"], block_numclearber = index)
-        block(win, 'Test', path , row["Block_type"], block_number = index,  paragraph_id = row["Paragraph_id"])
+        block(win, 'Test', path , row["Block_type"], block_number = index, \
+               paragraph_id = row["Paragraph_id"])
                 
         if not ((index +1) == number_of_blocks): 
-            expIntBlkIntervalToText = visual.TextStim(win, text= expIntBlkInterval, pos=[0, 0], wrapWidth=1.6, color='black')  
+            expIntBlkIntervalToText = visual.TextStim(win, \
+                                                      text= expIntBlkInterval,\
+                                                        pos=[0, 0],\
+                                                          wrapWidth=1.6,\
+                                                            color='black')  
             expIntBlkIntervalToText.draw()
             win.flip()
             core.wait(60)
          
-    
-     # add logic to iterate though passages
-    # todo: try to save all the passages in a excel and shuffle
-    # or use latin square 
-    # df = myShuffle(df)
-    # df = pd.read_excel('conditions_math_task_v1.xlsx')
-    # df = pd.read_excel(file_path)
-    # shuffle the passages 
-
     return True  
 
 def save():
     global df_data, df_tones 
     if (df_data.shape[0] > 0 and df_tones.shape[0] > 0 and df_qa.shape[0] > 0):
-        df_data.to_csv(data_results_filename + ".csv", encoding='utf-8', index=False)
-        df_tones.to_csv(tone_results_file_name + ".csv", encoding='utf-8', index=False)
-        df_qa.to_csv(qa_results_file_name + ".csv", encoding='utf-8', index=False)
+        df_data.to_csv(data_results_filename + ".csv", encoding='utf-8',\
+                        index=False)
+        df_tones.to_csv(tone_results_file_name + ".csv", encoding='utf-8',\
+                         index=False)
+        df_qa.to_csv(qa_results_file_name + ".csv", encoding='utf-8', \
+                     index=False)
 
 
 def runExperiment(win):
