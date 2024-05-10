@@ -9,6 +9,7 @@ import logging
 import datetime
 from sklearn.utils import shuffle
 import os
+import Stimulations
 
 ### tcp tagging stuff
 import sys
@@ -131,11 +132,6 @@ answers_stim =  visual.TextBox(win, size = (1, 1), font_size = 32,
 HOST = '127.0.0.1'
 PORT = 15361
 
-
-# Event identifier (See stimulation codes in OpenVibe documentation)
-# create a seperate python file with enums 
-EVENT_ID = 5+0x8100
-
 # Artificial delay (ms). 
 # It may need to be increased if the time to send the tag is too long and causes tag loss.
 DELAY=0
@@ -223,6 +219,7 @@ def introScreen(win):
 
 
     instructionScreen(win, intro1 , 'anykey')
+    sendTcpTag(Stimulations.OVTK_StimulationId_ExperimentStart)
     instructionScreen(win, ins1, 'space')
     instructionScreen(win, ins2, 'space')
     
@@ -297,6 +294,7 @@ def block(win, test_type, path, block_type, block_number, paragraph_id):
     globalClock.reset()
     kb.clearEvents()
     kb.clock.reset()
+    sendTcpTag(Stimulations.OVTK_StimulationId_Label_01)
 
 
     while(continueOuterLoop):
@@ -311,7 +309,12 @@ def block(win, test_type, path, block_type, block_number, paragraph_id):
                         auds[sound_type].play()
 
                         if (sound_type):
+                            sendTcpTag(\
+                                Stimulations.OVTK_StimulationId_Label_03)
                             count += 1
+                        else:
+                            sendTcpTag(\
+                                Stimulations.OVTK_StimulationId_Label_04)    
 
                         sound_playing = True
                         audio_iter += 1
@@ -342,6 +345,7 @@ def block(win, test_type, path, block_type, block_number, paragraph_id):
                     continueInnerLoop = False
                     continueOuterLoop = False
                     win.close()
+                    sendTcpTag(Stimulations.OVTK_StimulationId_ExperimentStop)
                     core.quit()
 
                 if resp=='space':
@@ -355,6 +359,7 @@ def block(win, test_type, path, block_type, block_number, paragraph_id):
                    
 
             if ((current_page_number == number_of_pages)):
+                sendTcpTag(Stimulations.OVTK_StimulationId_Label_02)
                 continueInnerLoop = False
                 mouse.mouseClock.reset()
                 prevButtonState = mouse.getPressed()
@@ -467,6 +472,7 @@ def questionsScreen(win, test_type, block_type,
             if resp=='escape':
                 continueInnerLoop = False
                 win.close()
+                sendTcpTag(Stimulations.OVTK_StimulationId_ExperimentStop)
                 core.quit()
 
 
@@ -564,6 +570,7 @@ def runExperiment(win):
 
     save()  
     win.close()
+    sendTcpTag(Stimulations.OVTK_StimulationId_ExperimentStop)
     core.quit() 
 
     
