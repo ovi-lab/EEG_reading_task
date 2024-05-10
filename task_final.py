@@ -78,9 +78,9 @@ auds = [aud1, aud2]
 # define text stims
 word_count_per_frame = 80
 
-passage_stim =  visual.TextBox(win, size = (0.9, 0.9), font_size = 32, \
+passage_stim =  visual.TextBox(win, size = (1.5, 1.5), font_size = 32, \
                                    pos= (0.0, 0.0), \
-                                    grid_vert_justification='center'
+                                    grid_vert_justification='center' \
                                    , font_color=[1,1,1])
 
 question_tone = visual.TextStim(\
@@ -118,16 +118,26 @@ mouse.clicked_name = []
 gotValidClick = False 
 
 
-question_stim =  visual.TextStim(win, height = 0.2, pos= (0.0, 0.5), \
-                                 color='black')
-answer_A =  visual.TextStim(win, height = 0.2, pos= (-0.75, -0.5), \
-                            color='black')
-answer_B =  visual.TextStim(win, height = 0.2,  pos= (0.75, -0.5), \
-                            color='black')
-answer_C =  visual.TextStim(win, height = 0.2,  pos= (0.75, -0.5), \
-                            color='black')
-answer_D =  visual.TextStim(win, height = 0.2,  pos= (0.75, -0.5), \
-                            color='black')
+question_stim =  visual.TextStim(win, wrapWidth=1.6, pos= (0.0, 0.25))
+                                 
+
+answers_stim =  visual.TextBox(win, size = (1, 1), font_size = 32, 
+                                   pos= (0.0, - 0.1), \
+                                    grid_vert_justification='center'\
+                                   , font_color=[1,1,1])
+
+
+                                 
+# answers_stim =  visual.TextStim(win, height = 0.2, pos= (0.0, 0.25), \
+#                                  color='black')
+# answer_A =  visual.TextStim(win, height = 0.2, pos= (-0.75, 0.25), \
+#                             color='black')
+# answer_B =  visual.TextStim(win, height = 0.2,  pos= (0.75, -0.5), \
+#                             color='black')
+# answer_C =  visual.TextStim(win, height = 0.2,  pos= (0.75, -0.5), \
+#                             color='black')
+# answer_D =  visual.TextStim(win, height = 0.2,  pos= (0.75, -0.5), \
+#                             color='black')
 
 # host and port of tcp tagging server
 HOST = '127.0.0.1'
@@ -274,12 +284,10 @@ def extract_sentences(path, word_count):
 
 def block(win, test_type, path, block_type, block_number, paragraph_id):
 
-    global df_data, df_tones, df_qa, word_count_per_frame 
+    global df_data, df_tones, word_count_per_frame 
 
     sentences =  extract_sentences(path, word_count_per_frame)
     number_of_pages = len(sentences)
-
-    print(number_of_pages)
 
     np.random.seed(7)
     sound_ind = np.random.binomial(1, 0.2, 10000)
@@ -336,8 +344,6 @@ def block(win, test_type, path, block_type, block_number, paragraph_id):
             # check and handle keyboard and mouse  
             keys = kb.getKeys(keyList = ['space', 'escape'], clear =True)
 
-            if (keys):
-                print([k.name for k in keys])
             if(keys):
                 resp = keys[0].name #take first response
 
@@ -408,18 +414,83 @@ def block(win, test_type, path, block_type, block_number, paragraph_id):
             continueOuterLoop = False  # abort routine on response
             continueInnerLoop = False          
         corr = 0
-        if (textbox.text != '') and (count == int(textbox.text)):
+        if (textbox.text.isdigit()) and (count == int(textbox.text)):
             corr = 1 
 
         logging.info( test_type +' - Actual Count: ' + str(count) +' , User Count: ' + str(textbox.text))  # info, error      
 
         if (test_type == 'Test'):
-            new_row = {'PID':PID, 'Date':today, 'Timestamp': timeStamp, 'BlockNo':block_number, 'BlockType': block_type,  'KeyPressed':  textbox.text ,'RT': rt,  'CorrectAns':  count, 'Correct': corr }
+            new_row = {'PID':PID, 'Date':today, 'Timestamp': timeStamp, 'BlockNo':block_number, 'BlockType': block_type,  'KeyPressed':  textbox.text ,  'CorrectAns':  count, 'Correct': corr }
             # df_tones = pd.concat([df_tones, new_row], ignore_index=True)
             df_tones = df_tones.append(new_row, ignore_index=True)
-        
-    return count
 
+    return questionsScreen(win, test_type, block_type, 
+                    block_number, paragraph_id)
+
+
+def questionsScreen(win, test_type, block_type, 
+                    block_number, paragraph_id):
+    global df_qa
+     # reads from a condition file
+
+    df_comp_questions = pd.read_excel('passage_qa/questionbank.xlsx')
+
+    continueInnerLoop = True
+    number_of_questions = df_comp_questions.shape[0]
+    current_question_number = 0
+    past_question_number = -1
+
+    print("Hahahaa 1")
+    core.wait(1) 
+    while(continueInnerLoop):
+
+        if(past_question_number < current_question_number):
+
+            print("Hahahaa 2")
+
+            df_item =  df_comp_questions.iloc[current_question_number]
+            question_stim.setText(df_item['Question'])
+            answers_stim.setText(df_item['Answers'])
+            correct_ans = df_item['Correct_answer']
+
+            question_stim.draw()
+            answers_stim.draw()
+            win.flip()
+
+            past_question_number +=1
+            print("Hahahaa 3")
+
+
+        keys = kb.getKeys(keyList = ['a','b','c','d', 'escape'], clear =True)
+
+        if(keys):
+            print("Hahahaa 4")
+            resp = keys[0].name #take first response
+
+            if resp=='escape':
+                continueInnerLoop = False
+                win.close()
+
+
+            corr = 0
+            if correct_ans == resp:
+                corr = 1
+
+            if (test_type == 'Test'):
+                new_row = {'PID':PID, 'Date':today, 'Timestamp': timeStamp, 'BlockNo':block_number, 'BlockType': block_type,  'Paragraph_id': paragraph_id, 'Question_id': df_item['Question_id'], 'KeyPressed':  resp ,  'CorrectAns':  correct_ans, 'Correct': corr }
+                # df_data = pd.concat([df_data, new_row], ignore_index=True)
+                df_qa = df_qa.append(new_row, ignore_index=True)
+
+
+            kb.clearEvents()
+            kb.clock.reset()  
+
+            current_question_number += 1
+
+        if (current_question_number == number_of_questions):
+              continueInnerLoop = False
+
+    return True          
 
 
 def experimentScreen(win):
@@ -463,9 +534,11 @@ def experimentScreen(win):
 
 def save():
     global df_data, df_tones 
-    if (df_data.shape[0] > 0 and df_tones.shape[0] > 0):
+    if (df_data.shape[0] > 0 and df_tones.shape[0] > 0 and df_qa.shape[0] > 0):
         df_data.to_csv(data_results_filename + ".csv", encoding='utf-8', index=False)
         df_tones.to_csv(tone_results_file_name + ".csv", encoding='utf-8', index=False)
+        df_qa.to_csv(qa_results_file_name + ".csv", encoding='utf-8', index=False)
+
 
 def runExperiment(win):
 
@@ -488,7 +561,7 @@ def runExperiment(win):
 
     instructionScreen(win, end, 'space')
 
-    # save()  
+    save()  
     win.close()
     core.quit() 
 
