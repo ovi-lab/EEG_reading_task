@@ -219,7 +219,6 @@ def introScreen(win):
 
 
     instructionScreen(win, intro1 , 'anykey')
-    sendTcpTag(Stimulations.OVTK_StimulationId_ExperimentStart)
     instructionScreen(win, ins1, 'space')
     instructionScreen(win, ins2, 'space')
     
@@ -564,13 +563,14 @@ def runExperiment(win):
     #     # trainingScreen(win)
 
     instructionScreen(win, exp_intro, 'space')
+    sendTcpTag(Stimulations.OVTK_StimulationId_ExperimentStart)
     experimentScreen(win)
+    sendTcpTag(Stimulations.OVTK_StimulationId_ExperimentStop)
 
     instructionScreen(win, end, 'space')
 
     save()  
     win.close()
-    sendTcpTag(Stimulations.OVTK_StimulationId_ExperimentStop)
     core.quit() 
 
     
