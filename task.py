@@ -260,7 +260,10 @@ def extract_sentences(path, word_count):
     sentences = []
     start = 0
     end = 0
-    for i in range(0, int(len(full_text)/ word_count )):
+    num_pages =  int(len(full_text)/ word_count)  \
+        if len(full_text) % word_count ==0 \
+            else int(len(full_text)/ word_count)  +1
+    for i in range(0, num_pages):
         end = end + word_count if end + word_count < len(full_text) else \
             len(full_text)
         text_range = full_text[start: end ]
@@ -293,7 +296,11 @@ def block(win, test_type, path, block_type, block_number, paragraph_id):
     globalClock.reset()
     kb.clearEvents()
     kb.clock.reset()
-    sendTcpTag(Stimulations.OVTK_StimulationId_Label_01)
+
+    if(block_type == 'D'): 
+        sendTcpTag(Stimulations.OVTK_StimulationId_Label_05)
+    else:
+         sendTcpTag(Stimulations.OVTK_StimulationId_Label_03)   
 
 
     while(continueOuterLoop):
@@ -309,11 +316,11 @@ def block(win, test_type, path, block_type, block_number, paragraph_id):
 
                         if (sound_type):
                             sendTcpTag(\
-                                Stimulations.OVTK_StimulationId_Label_03)
+                                Stimulations.OVTK_StimulationId_Label_01)
                             count += 1
                         else:
                             sendTcpTag(\
-                                Stimulations.OVTK_StimulationId_Label_04)    
+                                Stimulations.OVTK_StimulationId_Label_02)    
 
                         sound_playing = True
                         audio_iter += 1
@@ -355,10 +362,11 @@ def block(win, test_type, path, block_type, block_number, paragraph_id):
                 kb.clock.reset()
                 
 
-                   
-
             if ((current_page_number == number_of_pages)):
-                sendTcpTag(Stimulations.OVTK_StimulationId_Label_02)
+                if(block_type == 'D'): 
+                    sendTcpTag(Stimulations.OVTK_StimulationId_Label_06)
+                else:
+                    sendTcpTag(Stimulations.OVTK_StimulationId_Label_04)   
                 continueInnerLoop = False
                 mouse.mouseClock.reset()
                 prevButtonState = mouse.getPressed()
@@ -374,7 +382,7 @@ def block(win, test_type, path, block_type, block_number, paragraph_id):
                     # df_data = pd.concat([df_data, new_row], ignore_index=True)
                     df_data = df_data.append(new_row, ignore_index=True)
 
-                core.wait(1) 
+                core.wait(0.25) 
 
         # Text box to enter the "ODD" sound count
         if(block_type == 'D'): 
@@ -437,7 +445,10 @@ def questionsScreen(win, test_type, block_type,
     global df_qa
      # reads from a condition file
 
-    df_comp_questions = pd.read_excel('passage_qa/questionbank.xlsx')
+    all_df_comp_questions = pd.read_excel('passage_qa/questionbank.xlsx')
+    
+    df_comp_questions =  all_df_comp_questions.loc[\
+        all_df_comp_questions['Paragraph_id'] == paragraph_id]
 
     continueInnerLoop = True
     number_of_questions = df_comp_questions.shape[0]
@@ -509,7 +520,9 @@ def experimentScreen(win):
     
     
     # reads from a condition file
-    df_block_setup = pd.read_excel('conditions\conditions.xlsx')
+    all_df_block_setup = pd.read_excel('conditions\conditions.xlsx')
+
+    df_block_setup = all_df_block_setup.loc[all_df_block_setup['PID'] == int(PID)]
 
     #todo: do a group by for PID
     number_of_blocks = df_block_setup.shape[0]
