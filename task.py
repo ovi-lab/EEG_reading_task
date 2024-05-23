@@ -305,6 +305,7 @@ def block(win, test_type, path, block_type, block_number, paragraph_id):
 
     while(continueOuterLoop):
 
+        routineTimer.reset()
         while(continueInnerLoop) :
 
             if(block_type == 'D'): 
@@ -333,8 +334,12 @@ def block(win, test_type, path, block_type, block_number, paragraph_id):
 
 
             if (past_page_number <  current_page_number):
+                print("HAHAHAHA 01")
+                opacity_level = 1
+                routineTimer.reset()
                 thisText = sentences[current_page_number]
                 passage_stim.setText(thisText)
+                passage_stim.setOpacity(opacity_level)
 
                 passage_stim.draw()
                 win.flip()
@@ -342,7 +347,7 @@ def block(win, test_type, path, block_type, block_number, paragraph_id):
                 past_page_number += 1  
 
             # check and handle keyboard and mouse  
-            keys = kb.getKeys(keyList = ['space', 'escape'], clear =True)
+            keys = kb.getKeys(keyList = ['escape'], clear =True)
 
             if(keys):
                 resp = keys[0].name #take first response
@@ -354,13 +359,19 @@ def block(win, test_type, path, block_type, block_number, paragraph_id):
                     sendTcpTag(Stimulations.OVTK_StimulationId_ExperimentStop)
                     core.quit()
 
-                if resp=='space':
-                    current_page_number += 1
-        
-
                 kb.clearEvents()
                 kb.clock.reset()
                 
+            if routineTimer.getTime() > 14:
+                print("HAHAHAHA 03")
+                current_page_number += 1
+
+            if routineTimer.getTime() > 12:
+                opacity_level =  (14 - routineTimer.getTime()) /2 
+                passage_stim.setOpacity(opacity_level)
+                passage_stim.draw()
+                win.flip()
+
 
             if ((current_page_number == number_of_pages)):
                 if(block_type == 'D'): 
