@@ -207,7 +207,7 @@ def introScreen(win):
     intro1 = 'Press a key to begin experiment'
 
     ins1 = 'Here, you are going to do reading comprehension,\n\n' +  \
-    'read a passage and then select the correct answers for the questions' + \
+    'Read a passage and then select the correct answer' + \
         ' \n\nPress "SPACE" for more instructions'
     ins2 =  'In some of the blocks you would here sounds\n\nSpecifically,'+ \
         ' Frequent sounds and ODD sounds\n\n'+\
@@ -624,7 +624,7 @@ def runExperiment(win):
 
     end = 'Thank you for participating!\n\nPress "SPACE" to END'
 
-    # introScreen(win)
+    introScreen(win)
 
     # print(trainingTrials)
     
