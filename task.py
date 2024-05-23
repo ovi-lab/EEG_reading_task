@@ -334,7 +334,6 @@ def block(win, test_type, path, block_type, block_number, paragraph_id):
 
 
             if (past_page_number <  current_page_number):
-                print("HAHAHAHA 01")
                 opacity_level = 1
                 routineTimer.reset()
                 thisText = sentences[current_page_number]
@@ -363,7 +362,6 @@ def block(win, test_type, path, block_type, block_number, paragraph_id):
                 kb.clock.reset()
                 
             if routineTimer.getTime() > 14:
-                print("HAHAHAHA 03")
                 current_page_number += 1
 
             if routineTimer.getTime() > 12:
