@@ -125,6 +125,7 @@ question_stim =  visual.TextStim(win, wrapWidth=1.6, pos= (0.0, 0.25))
 answers_stim =  visual.TextBox(win, size = (1, 1), font_size = 32, 
                                    pos= (0.0, - 0.1), \
                                     grid_vert_justification='center'\
+                                    ,grid_horz_justification='center'\
                                    , font_color=[1,1,1])
 
 
@@ -300,7 +301,8 @@ def format_text(text, line_length=38, lines_per_page=9):
             # Check if the current page has enough lines
             if page_count== lines_per_page:
                 pages.append(current_page)
-                current_page = " `"
+                current_page = " "
+                page_count = 0
 
     # Add any remaining text to the current page
     if current_line:
@@ -321,6 +323,7 @@ def block(win, test_type, path, block_type, block_number, paragraph_id):
 
     # sentences =  extract_sentences(path, word_count_per_frame)
     number_of_pages = len(sentences_for_pages)
+    print(number_of_pages)
 
     np.random.seed(7)
     sound_ind = np.random.binomial(1, 0.2, 10000)
