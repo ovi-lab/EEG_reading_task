@@ -249,7 +249,7 @@ def introScreen(win):
     core.wait(3)
 
 
-def extract_sentences(path, word_count):
+'''def extract_sentences(path, word_count):
     full_text = []
 
     with open(path) as f:
@@ -270,14 +270,57 @@ def extract_sentences(path, word_count):
         sentence = ' '.join(text_range)
         sentences.append(sentence)
         start =  end
-    return sentences
+    return sentences '''
+
+
+def read_text(path):
+    with open(path) as f:
+       return f.read()
+                
+
+def format_text(text, line_length=38, lines_per_page=9):
+    words = text.split()
+    pages = []
+    current_page = ""
+    current_line = ""
+    page_count = 0
+
+    for word in words:
+        # Check if adding the next word would exceed the line length
+        if len(current_line) + len(word) + 1 <= line_length:
+            # if current_line:
+            current_line += " "
+            current_line += word
+        else:
+            # Add the current line to the current page
+            current_line += ' \n '  
+            current_page += current_line
+            current_line = word
+            page_count += 1
+            # Check if the current page has enough lines
+            if page_count== lines_per_page:
+                pages.append(current_page)
+                current_page = " `"
+
+    # Add any remaining text to the current page
+    if current_line:
+        current_page += current_line
+    if current_page:
+        pages.append(current_page)
+
+    return pages
+
 
 def block(win, test_type, path, block_type, block_number, paragraph_id):
 
     global df_data, df_tones, word_count_per_frame 
 
-    sentences =  extract_sentences(path, word_count_per_frame)
-    number_of_pages = len(sentences)
+    text =  read_text(path)
+
+    sentences_for_pages = format_text(text)
+
+    # sentences =  extract_sentences(path, word_count_per_frame)
+    number_of_pages = len(sentences_for_pages)
 
     np.random.seed(7)
     sound_ind = np.random.binomial(1, 0.2, 10000)
@@ -336,7 +379,7 @@ def block(win, test_type, path, block_type, block_number, paragraph_id):
             if (past_page_number <  current_page_number):
                 opacity_level = 1
                 routineTimer.reset()
-                thisText = sentences[current_page_number]
+                thisText = sentences_for_pages[current_page_number]
                 passage_stim.setText(thisText)
                 passage_stim.setOpacity(opacity_level)
 
