@@ -79,7 +79,7 @@ auds = [aud1, aud2]
 # define text stims
 word_count_per_frame = 80
 
-passage_stim =  visual.TextBox(win, size = (1.5, 1.5), font_size = 32, \
+passage_stim =  visual.TextBox(win, size = (1, 1.5), font_size = 32, \
                                    pos= (0.0, 0.0), \
                                     grid_vert_justification='center' \
                                    , font_color=[1,1,1])
@@ -125,7 +125,6 @@ question_stim =  visual.TextStim(win, wrapWidth=1.6, pos= (0.0, 0.25))
 answers_stim =  visual.TextBox(win, size = (1, 1), font_size = 32, 
                                    pos= (0.0, - 0.1), \
                                     grid_vert_justification='center'\
-                                    ,grid_horz_justification='center'\
                                    , font_color=[1,1,1])
 
 
@@ -392,7 +391,7 @@ def block(win, test_type, path, block_type, block_number, paragraph_id):
                 past_page_number += 1  
 
             # check and handle keyboard and mouse  
-            keys = kb.getKeys(keyList = ['escape'], clear =True)
+            keys = kb.getKeys(keyList = ['space', 'escape'], clear =True)
 
             if(keys):
                 resp = keys[0].name #take first response
@@ -406,6 +405,9 @@ def block(win, test_type, path, block_type, block_number, paragraph_id):
 
                 kb.clearEvents()
                 kb.clock.reset()
+
+                if resp=='space':
+                    routineTimer.addTime(14)
                 
             if routineTimer.getTime() > 14:
                 current_page_number += 1
