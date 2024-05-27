@@ -11,6 +11,8 @@ from sklearn.utils import shuffle
 import os
 import Stimulations
 
+np.random.seed(7)
+
 ### tcp tagging stuff
 import sys
 import socket
@@ -66,8 +68,8 @@ win = visual.Window([1920,1080], fullscr=True, units='norm',  screen=1)
 kb = keyboard.Keyboard(backend='ptb')
 
 # define tones
-sound_duration = 0.2
-sound_iti = 1.5
+sound_duration = 0.2 
+sound_iti = 2 # originaly 1.5
 sound_playing = False
 
 aud1 = sound.Sound("C", octave=5, sampleRate=44100, secs=sound_duration, \
@@ -171,7 +173,8 @@ def myShuffle(array):
 
 def instructionScreen(window, instructionText, advance):
     textToShow = visual.TextStim(win=window, text=instructionText, pos=[0, 0],\
-                                  wrapWidth=1.6, color='black')
+                                  wrapWidth=1.6, color='black',\
+                                      anchorHoriz = 'center')
     textToShow.draw()
     window.flip()
     # Advance on key press
@@ -183,6 +186,27 @@ def instructionScreen(window, instructionText, advance):
             keypress=event.waitKeys()[0]
             if keypress==advance:
                 break
+
+def instructionScreenWithSounds(window, instructionText, advance, aud):
+    textToShow = visual.TextStim(win=window, text=instructionText, pos=[0, 0],\
+                                  wrapWidth=1.6, color='black', \
+                                    anchorHoriz = 'center')
+    textToShow.draw()
+    window.flip()
+    core.wait(1)
+    aud.play()
+    core.wait(1)
+    aud.stop()
+    # Advance on key press
+    if advance=='anykey':
+        key=event.waitKeys()
+        return key
+    else:
+        while True:
+            keypress=event.waitKeys()[0]
+            if keypress==advance:
+                break
+
 
 def messageScreen(message):
     textToShow = visual.TextStim(win=win, text=message, pos=[0, 0],\
@@ -206,47 +230,66 @@ def introScreen(win):
 
     intro1 = 'Press a key to begin experiment'
 
-    ins1 = 'Here, you are going to do reading comprehension,\n\n' +  \
-    'Read a passage and then select the correct answer' + \
-        ' \n\nPress "SPACE" for more instructions'
-    ins2 =  'In some of the blocks you would here sounds\n\nSpecifically,'+ \
-        ' Frequent sounds and ODD sounds\n\n'+\
-            'Press "SPACE" for more instructions'
-    ins3a = 'The Frequent tone sounds like this'
-    ins3b = 'The ODD tone sounds like this'
-    ins3c = 'You need to count the number of times you hear the ODD sound'+\
-        ' in a block'
+    ins1 = 'Welcome to the Reading Comprehension Task\n\n' +  \
+    'Task: \n\n' +\
+    '1. Read the passage. \n' + \
+    '2. Select the correct answer. \n'+ \
+    ' \n\nPress "SPACE" for more instructions'
+    
+    ins2 = 'Study Conditions:\n\n' +  \
+    'You will participate in two types of study conditions/blocks: \n\n' +\
+    '1. Distractor Condition: You will hear distractor sounds. \n' + \
+    '2.  Quiet Condition: There will be no distractions. \n'+ \
+    ' \n\nPress "SPACE" for more instructions'
+
+        
+    ins3 = 'Distractor Condition Task:\n\n' +  \
+    'In the distractor condition, you will be asked to'+\
+    'count the number of "ODD" sounds you hear. \n\n' +\
+    ' \n\nPress "SPACE" for more instructions'
+
+    ins3a = '"ODD" Tone:\n\n' +  \
+    'The "ODD" tone sounds like this:\n\n' +\
+    '\n\nPress "SPACE" for more instructions'
+
+    ins3b = '"Frequent" Tone:\n\n' +  \
+    'The "Frequent" tone sounds like this:\n\n' +\
+    '\n\nPress "SPACE" for more instructions'
 
 
     instructionScreen(win, intro1 , 'anykey')
     instructionScreen(win, ins1, 'space')
     instructionScreen(win, ins2, 'space')
+    instructionScreen(win, ins3, 'space')
+
+    instructionScreenWithSounds(win, ins3a, 'space', aud1 )
+    instructionScreenWithSounds(win, ins3b, 'space', aud2 )
     
     
-    ins3aToText = visual.TextStim(win, text= ins3a, pos=[0, 0], wrapWidth=1.6,\
-                                   color='black')
-    ins3aToText.draw()
-    win.flip()
-    core.wait(1)
-    aud1.play()
-    core.wait(1)
-    aud1.stop()
+    # ins3aToText = visual.TextStim(win, text= ins3a, pos=[0, 0], wrapWidth=1.6,\
+    #                                color='black')
+    # ins3aToText.draw()
+    # win.flip()
+    # core.wait(1)
+    # aud1.play()
+    # core.wait(1)
+    # aud1.stop()
 
 
-    ins3bToText = visual.TextStim(win, text= ins3b, pos=[0, 0], wrapWidth=1.6,\
-                                   color='black')  
-    ins3bToText.draw()
-    win.flip()
-    core.wait(1)    
-    aud2.play()
-    core.wait(1)
-    aud2.stop()
+    # ins3bToText = visual.TextStim(win, text= ins3b, pos=[0, 0], wrapWidth=1.6,\
+    #                                color='black')  
+    # ins3bToText.draw()
+    # win.flip()
+    # core.wait(1)    
+    # aud2.play()
+    # core.wait(1)
+    # aud2.stop()
 
-    ins3cToText = visual.TextStim(win, text= ins3c, pos=[0, 0], wrapWidth=1.6,\
-                                   color='black')  
-    ins3cToText.draw()
-    win.flip()
-    core.wait(3)
+    # ins3cToText = visual.TextStim(win, text= ins3c, pos=[0, 0], wrapWidth=1.6,\
+    #                                color='black')  
+    # ins3cToText.draw()
+    # win.flip()
+    # core.wait(3)
 
 
 '''def extract_sentences(path, word_count):
@@ -324,7 +367,6 @@ def block(win, test_type, path, block_type, block_number, paragraph_id):
     number_of_pages = len(sentences_for_pages)
     print(number_of_pages)
 
-    np.random.seed(7)
     sound_ind = np.random.binomial(1, 0.2, 10000)
     
     
