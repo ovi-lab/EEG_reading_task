@@ -262,8 +262,8 @@ def introScreen(win):
     instructionScreen(win, ins2, 'space')
     instructionScreen(win, ins3, 'space')
 
-    instructionScreenWithSounds(win, ins3a, 'space', aud1 )
-    instructionScreenWithSounds(win, ins3b, 'space', aud2 )
+    instructionScreenWithSounds(win, ins3a, 'space', aud2 )
+    instructionScreenWithSounds(win, ins3b, 'space', aud1 )
     
     
     # ins3aToText = visual.TextStim(win, text= ins3a, pos=[0, 0], wrapWidth=1.6,\
