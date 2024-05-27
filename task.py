@@ -10,6 +10,7 @@ import datetime
 from sklearn.utils import shuffle
 import os
 import Stimulations
+from time import sleep
 
 np.random.seed(7)
 
@@ -244,7 +245,7 @@ def introScreen(win):
 
         
     ins3 = 'Distractor Condition Task:\n\n' +  \
-    'In the distractor condition, you will be asked to'+\
+    'In the distractor condition, you will be asked to '+\
     'count the number of "ODD" sounds you hear. \n\n' +\
     ' \n\nPress "SPACE" for more instructions'
 
@@ -317,7 +318,7 @@ def introScreen(win):
 
 
 def read_text(path):
-    with open(path) as f:
+    with open(path,  encoding="utf8") as f:
        return f.read()
                 
 
@@ -367,7 +368,7 @@ def block(win, test_type, path, block_type, block_number, paragraph_id):
     number_of_pages = len(sentences_for_pages)
     print(number_of_pages)
 
-    sound_ind = np.random.binomial(1, 0.2, 10000)
+    sound_ind = np.random.binomial(1, 0.2, 1000)
     
     
     count = 0
@@ -455,7 +456,7 @@ def block(win, test_type, path, block_type, block_number, paragraph_id):
                 current_page_number += 1
 
             if routineTimer.getTime() > 12:
-                opacity_level =  (14 - routineTimer.getTime()) /2 
+                opacity_level =  (14 - routineTimer.getTime()) /2
                 passage_stim.setOpacity(opacity_level)
                 passage_stim.draw()
                 win.flip()
@@ -483,6 +484,7 @@ def block(win, test_type, path, block_type, block_number, paragraph_id):
 
                 core.wait(0.25) 
 
+            core.wait(0.001) # helps with the keyboard polling issue
         # Text box to enter the "ODD" sound count
         if(block_type == 'D'): 
 
@@ -517,6 +519,8 @@ def block(win, test_type, path, block_type, block_number, paragraph_id):
                         if gotValidClick: 
                             continueOuterLoop = False  # abort routine on response
                             continueInnerLoop = False
+
+            core.wait(0.001) # helps with the keyboard polling issue
         else: 
             continueOuterLoop = False  # abort routine on response
             continueInnerLoop = False          
