@@ -44,11 +44,20 @@ globalClock = core.Clock()
 routineTimer = core.Clock() 
 
 timeStamp=core.getAbsTime()
-today=datetime.date.today()
+today= datetime.date.today().strftime('%Y/ %m/ %d') 
 
-data_results_filename = "data/reading_data/"+ "data_" + PID + "_" + data.getDateStr() 
-tone_results_file_name = "data/tones/" + "tones_" + PID + "_" + data.getDateStr() 
-qa_results_file_name = "data/qa/" + "tones_" + PID + "_" + data.getDateStr() 
+data_results_filename =  os.path.join(current_directory, 'data','reading_data'\
+                                      , "data_" + PID + "_" + data.getDateStr())
+
+tone_results_file_name =  os.path.join(current_directory, 'data','tones'\
+                                      , "tones_" + PID + "_" + data.getDateStr())
+
+qa_results_file_name =  os.path.join(current_directory, 'data','qa'\
+                                      , "qa_" + PID + "_" + data.getDateStr())
+
+# data_results_filename = "data/reading_data/"+ "data_" + PID + "_" + data.getDateStr() 
+# tone_results_file_name = "data/tones/" + "tones_" + PID + "_" + data.getDateStr() 
+# qa_results_file_name = "data/qa/" + "tones_" + PID + "_" + data.getDateStr() 
 
 df_data = pd.DataFrame(columns=['PID', 'Date','Timestamp', 'BlockNo', \
                                 'BlockType', 'Paragraph_id', 'Reading_time'])
@@ -267,55 +276,6 @@ def introScreen(win):
     instructionScreenWithSounds(win, ins3b, 'space', aud1 )
     
     
-    # ins3aToText = visual.TextStim(win, text= ins3a, pos=[0, 0], wrapWidth=1.6,\
-    #                                color='black')
-    # ins3aToText.draw()
-    # win.flip()
-    # core.wait(1)
-    # aud1.play()
-    # core.wait(1)
-    # aud1.stop()
-
-
-    # ins3bToText = visual.TextStim(win, text= ins3b, pos=[0, 0], wrapWidth=1.6,\
-    #                                color='black')  
-    # ins3bToText.draw()
-    # win.flip()
-    # core.wait(1)    
-    # aud2.play()
-    # core.wait(1)
-    # aud2.stop()
-
-    # ins3cToText = visual.TextStim(win, text= ins3c, pos=[0, 0], wrapWidth=1.6,\
-    #                                color='black')  
-    # ins3cToText.draw()
-    # win.flip()
-    # core.wait(3)
-
-
-'''def extract_sentences(path, word_count):
-    full_text = []
-
-    with open(path) as f:
-        for line in f:
-            for word in line.split():
-                full_text.append(word)
-                
-    sentences = []
-    start = 0
-    end = 0
-    num_pages =  int(len(full_text)/ word_count)  \
-        if len(full_text) % word_count ==0 \
-            else int(len(full_text)/ word_count)  +1
-    for i in range(0, num_pages):
-        end = end + word_count if end + word_count < len(full_text) else \
-            len(full_text)
-        text_range = full_text[start: end ]
-        sentence = ' '.join(text_range)
-        sentences.append(sentence)
-        start =  end
-    return sentences '''
-
 
 def read_text(path):
     with open(path,  encoding="utf8") as f:
@@ -364,9 +324,7 @@ def block(win, test_type, path, block_type, block_number, paragraph_id):
 
     sentences_for_pages = format_text(text)
 
-    # sentences =  extract_sentences(path, word_count_per_frame)
     number_of_pages = len(sentences_for_pages)
-    print(number_of_pages)
 
     sound_ind = np.random.binomial(1, 0.2, 1000)
     
@@ -442,6 +400,7 @@ def block(win, test_type, path, block_type, block_number, paragraph_id):
                 if resp=='escape':
                     continueInnerLoop = False
                     continueOuterLoop = False
+                    save()
                     win.close()
                     sendTcpTag(Stimulations.OVTK_StimulationId_ExperimentStop)
                     core.quit()
@@ -594,6 +553,7 @@ def questionsScreen(win, test_type, block_type,
 
             if resp=='escape':
                 continueInnerLoop = False
+                save()
                 win.close()
                 sendTcpTag(Stimulations.OVTK_StimulationId_ExperimentStop)
                 core.quit()
@@ -638,6 +598,7 @@ def experimentScreen(win):
     all_df_block_setup = pd.read_excel(path)
 
     df_block_setup = all_df_block_setup.loc[all_df_block_setup['PID'] == int(PID)]
+    df_block_setup = df_block_setup.reset_index(drop = True)
 
     #todo: do a group by for PID
     number_of_blocks = df_block_setup.shape[0]
@@ -651,7 +612,7 @@ def experimentScreen(win):
 
         block(win, 'Test', path , row["Block_type"], block_number = index, \
                paragraph_id = row["Paragraph_id"])
-                
+        print(str ((index +1)) + " and " + str(number_of_blocks)  )             
         if not ((index +1) == number_of_blocks): 
             expIntBlkIntervalToText = visual.TextStim(win, \
                                                       text= expIntBlkInterval,\
@@ -665,15 +626,17 @@ def experimentScreen(win):
     return True  
 
 def save():
-    global df_data, df_tones 
-    if (df_data.shape[0] > 0 and df_tones.shape[0] > 0 and df_qa.shape[0] > 0):
+    global df_data, df_tones, df_qa
+
+    if(df_data.shape[0] > 0):
         df_data.to_csv(data_results_filename + ".csv", encoding='utf-8',\
                         index=False)
+    if df_tones.shape[0] > 0:
         df_tones.to_csv(tone_results_file_name + ".csv", encoding='utf-8',\
                          index=False)
+    if df_qa.shape[0] > 0 :
         df_qa.to_csv(qa_results_file_name + ".csv", encoding='utf-8', \
                      index=False)
-
 
 def runExperiment(win):
 
@@ -683,7 +646,7 @@ def runExperiment(win):
 
     end = 'Thank you for participating!\n\nPress "SPACE" to END'
 
-    introScreen(win)
+    # introScreen(win)
 
     # print(trainingTrials)
     
