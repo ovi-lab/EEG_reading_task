@@ -33,11 +33,12 @@ current_directory = os.path.dirname(__file__)
 
 
 # Preliminary setup box and variable capture
-info={'participant':''}
+info={'participant':'', 'practice': ["Y", "N"] }
 infoDlg=gui.DlgFromDict(dictionary=info, title='Setup',order=['participant'])
 if not infoDlg.OK: core.quit()
 
 PID=info['participant']
+practice = info['practice']
 blocks= ['ND','D']
 
 globalClock = core.Clock()
@@ -625,6 +626,47 @@ def experimentScreen(win):
          
     return True  
 
+
+def trainingScreen(win):
+
+    
+    expIntBlkInterval = 'One minute mandatory break'
+    expIntro =' Press a key to begin the practice block'
+    
+    
+    # reads from a condition file
+    path =  os.path.join(current_directory, 'conditions','conditions.xlsx')
+    print(path)
+    all_df_block_setup = pd.read_excel(path)
+
+    df_block_setup = all_df_block_setup.loc[all_df_block_setup['PID'] == int(-1)]
+    df_block_setup = df_block_setup.reset_index(drop = True)
+
+    #todo: do a group by for PID
+    number_of_blocks = df_block_setup.shape[0]
+
+
+    for index, row in df_block_setup.iterrows():
+
+        instructionScreen(win, expIntro , 'anykey')
+        path =  os.path.join(current_directory, 'comp_materials','passages',\
+                         row["Paragraph_id"] + '.txt')
+
+        block(win, 'Practice', path , row["Block_type"], block_number = index, \
+               paragraph_id = row["Paragraph_id"])
+        print(str ((index +1)) + " and " + str(number_of_blocks)  )             
+        if not ((index +1) == number_of_blocks): 
+            expIntBlkIntervalToText = visual.TextStim(win, \
+                                                      text= expIntBlkInterval,\
+                                                        pos=[0, 0],\
+                                                          wrapWidth=1.6,\
+                                                            color='black')  
+            expIntBlkIntervalToText.draw()
+            win.flip()
+            core.wait(60)
+         
+    return True  
+
 def save():
     global df_data, df_tones, df_qa
 
@@ -640,7 +682,7 @@ def save():
 
 def runExperiment(win):
 
-    prac_test_intro =  'Press "SPACE" to start the practice test'
+    prac_test_intro =  'Press "SPACE" to start the practice rounds'
 
     exp_intro =  'Press "SPACE" to start the experiment'
 
@@ -648,11 +690,13 @@ def runExperiment(win):
 
     # introScreen(win)
 
-    # print(trainingTrials)
+    print(practice)
+
+    instructionScreen(win, exp_intro, 'space')
     
-    # if( trainingTrials == '[\'Yes\']'): 
-    #     instructionScreen(win, prac_test_intro, 'space')
-    #     # trainingScreen(win)
+    if( practice == 'Y'):
+        instructionScreen(win, prac_test_intro, 'space')
+        trainingScreen(win)
 
     instructionScreen(win, exp_intro, 'space')
     sendTcpTag(Stimulations.OVTK_StimulationId_ExperimentStart)
