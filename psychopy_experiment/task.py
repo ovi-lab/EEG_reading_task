@@ -56,15 +56,11 @@ tone_results_file_name =  os.path.join(current_directory, 'data','tones'\
 qa_results_file_name =  os.path.join(current_directory, 'data','qa'\
                                       , "qa_" + PID + "_" + data.getDateStr())
 
-# data_results_filename = "data/reading_data/"+ "data_" + PID + "_" + data.getDateStr() 
-# tone_results_file_name = "data/tones/" + "tones_" + PID + "_" + data.getDateStr() 
-# qa_results_file_name = "data/qa/" + "tones_" + PID + "_" + data.getDateStr() 
-
 df_data = pd.DataFrame(columns=['PID', 'Date','Timestamp', 'BlockNo', \
                                 'BlockType', 'Paragraph_id', 'Reading_time'])
 
 df_tones = pd.DataFrame(columns=['PID', 'Date','Timestamp', 'BlockNo',\
-                                  'BlockType', 'KeyPressed', 'CorrectAns', \
+                                  'BlockType', 'Paragraph_id' 'KeyPressed', 'CorrectAns', \
                                     'Correct'])
 
 df_qa = pd.DataFrame(columns=['PID', 'Date','Timestamp', 'BlockNo', \
@@ -492,7 +488,8 @@ def block(win, test_type, path, block_type, block_number, paragraph_id):
                                 new_row = {'PID':PID, 'Date':today, 
                                            'Timestamp': timeStamp,
                                             'BlockNo':block_number, 
-                                            'BlockType': block_type,  
+                                            'BlockType': block_type,
+                                            'Paragraph_id': paragraph_id,  
                                             'KeyPressed':  textbox.text , 
                                             'CorrectAns':  count, 
                                             'Correct': corr }
