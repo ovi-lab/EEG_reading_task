@@ -60,7 +60,7 @@ df_data = pd.DataFrame(columns=['PID', 'Date','Timestamp', 'BlockNo', \
                                 'BlockType', 'Paragraph_id', 'Reading_time'])
 
 df_tones = pd.DataFrame(columns=['PID', 'Date','Timestamp', 'BlockNo',\
-                                  'BlockType', 'Paragraph_id' 'KeyPressed', 'CorrectAns', \
+                                  'BlockType', 'Paragraph_id', 'KeyPressed', 'CorrectAns', \
                                     'Correct'])
 
 df_qa = pd.DataFrame(columns=['PID', 'Date','Timestamp', 'BlockNo', \
@@ -233,6 +233,26 @@ def messageScreen(message):
             core.quit()
 
 
+def distractorTaskInstructions(win):
+
+    ins3 = 'Distractor Condition Task:\n\n' +  \
+    'In the distractor condition, you will be asked to '+\
+    'count the number of "ODD" sounds you hear. \n\n' +\
+    ' \n\nPress "SPACE" for more instructions'
+
+    ins3a = '"ODD" Tone:\n\n' +  \
+    'The "ODD" tone sounds like this:\n\n' +\
+    '\n\nPress "SPACE" for more instructions'
+
+    ins3b = '"Frequent" Tone:\n\n' +  \
+    'The "Frequent" tone sounds like this:\n\n' +\
+    '\n\nPress "SPACE" for more instructions'
+
+
+    instructionScreen(win, ins3, 'space')
+    instructionScreenWithSounds(win, ins3a, 'space', aud2 )
+    instructionScreenWithSounds(win, ins3b, 'space', aud1 )
+
 def introScreen(win):
 
     intro1 = 'Press a key to begin experiment'
@@ -255,23 +275,12 @@ def introScreen(win):
     'count the number of "ODD" sounds you hear. \n\n' +\
     ' \n\nPress "SPACE" for more instructions'
 
-    ins3a = '"ODD" Tone:\n\n' +  \
-    'The "ODD" tone sounds like this:\n\n' +\
-    '\n\nPress "SPACE" for more instructions'
-
-    ins3b = '"Frequent" Tone:\n\n' +  \
-    'The "Frequent" tone sounds like this:\n\n' +\
-    '\n\nPress "SPACE" for more instructions'
-
 
     instructionScreen(win, intro1 , 'anykey')
     instructionScreen(win, ins1, 'space')
     instructionScreen(win, ins2, 'space')
-    instructionScreen(win, ins3, 'space')
 
-    instructionScreenWithSounds(win, ins3a, 'space', aud2 )
-    instructionScreenWithSounds(win, ins3b, 'space', aud1 )
-    
+    distractorTaskInstructions(win)
     
 
 def read_text(path):
@@ -340,10 +349,13 @@ def block(win, test_type, path, block_type, block_number, paragraph_id):
     kb.clearEvents()
     kb.clock.reset()
 
-    if(block_type == 'D'): 
-        sendTcpTag(Stimulations.OVTK_StimulationId_Label_05)
+    if(block_type == 'D'):
+        distractorTaskInstructions(win)
+        if (test_type == 'Test'): 
+            sendTcpTag(Stimulations.OVTK_StimulationId_Label_05)
     else:
-         sendTcpTag(Stimulations.OVTK_StimulationId_Label_03)   
+        if (test_type == 'Test'): 
+            sendTcpTag(Stimulations.OVTK_StimulationId_Label_03)   
 
 
     while(continueOuterLoop):
@@ -359,11 +371,13 @@ def block(win, test_type, path, block_type, block_number, paragraph_id):
                         auds[sound_type].play()
 
                         if (sound_type):
-                            sendTcpTag(\
+                            if (test_type == 'Test'): 
+                                sendTcpTag(\
                                 Stimulations.OVTK_StimulationId_Label_01)
                             count += 1
                         else:
-                            sendTcpTag(\
+                            if (test_type == 'Test'): 
+                                sendTcpTag(\
                                 Stimulations.OVTK_StimulationId_Label_02)    
 
                         sound_playing = True
@@ -419,10 +433,12 @@ def block(win, test_type, path, block_type, block_number, paragraph_id):
 
 
             if ((current_page_number == number_of_pages)):
-                if(block_type == 'D'): 
-                    sendTcpTag(Stimulations.OVTK_StimulationId_Label_06)
+                if(block_type == 'D'):
+                    if (test_type == 'Test'):  
+                        sendTcpTag(Stimulations.OVTK_StimulationId_Label_06)
                 else:
-                    sendTcpTag(Stimulations.OVTK_StimulationId_Label_04)   
+                    if (test_type == 'Test'): 
+                        sendTcpTag(Stimulations.OVTK_StimulationId_Label_04)   
                 continueInnerLoop = False
                 mouse.mouseClock.reset()
                 prevButtonState = mouse.getPressed()
@@ -592,7 +608,6 @@ def experimentScreen(win):
     
     # reads from a condition file
     path =  os.path.join(current_directory, 'conditions','conditions.xlsx')
-    print(path)
     all_df_block_setup = pd.read_excel(path)
 
     df_block_setup = all_df_block_setup.loc[all_df_block_setup['PID'] == int(PID)]
@@ -610,7 +625,7 @@ def experimentScreen(win):
 
         block(win, 'Test', path , row["Block_type"], block_number = index, \
                paragraph_id = row["Paragraph_id"])
-        print(str ((index +1)) + " and " + str(number_of_blocks)  )             
+        
         if not ((index +1) == number_of_blocks): 
             expIntBlkIntervalToText = visual.TextStim(win, \
                                                       text= expIntBlkInterval,\
@@ -633,7 +648,6 @@ def trainingScreen(win):
     
     # reads from a condition file
     path =  os.path.join(current_directory, 'conditions','conditions.xlsx')
-    print(path)
     all_df_block_setup = pd.read_excel(path)
 
     df_block_setup = all_df_block_setup.loc[all_df_block_setup['PID'] == int(-1)]
@@ -651,7 +665,7 @@ def trainingScreen(win):
 
         block(win, 'Practice', path , row["Block_type"], block_number = index, \
                paragraph_id = row["Paragraph_id"])
-        print(str ((index +1)) + " and " + str(number_of_blocks)  )             
+             
         if not ((index +1) == number_of_blocks): 
             expIntBlkIntervalToText = visual.TextStim(win, \
                                                       text= expIntBlkInterval,\
@@ -685,9 +699,7 @@ def runExperiment(win):
 
     end = 'Thank you for participating!\n\nPress "SPACE" to END'
 
-    # introScreen(win)
-
-    print(practice)
+    introScreen(win)
 
     instructionScreen(win, exp_intro, 'space')
     
