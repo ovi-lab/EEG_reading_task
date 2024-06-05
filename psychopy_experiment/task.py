@@ -265,9 +265,9 @@ def introScreen(win):
 
     ins1a = 'Page Controls: \n\n' +  \
     '1. A page contains 9 lines. \n' + \
-    '2. A line consists of 40 characters (about 4-5 words). \n'+ \
+    '2. A line consists of 40 characters (about 4 - 8 words). \n'+ \
     '3. Each page lasts 12 seconds. \n'+ \
-    '4. Else, you can advance through pages by pressing "SPACE".\n'+ \
+    '4. You can advance through pages by pressing "SPACE".\n'+ \
     ' \n\nPress "SPACE" for more instructions'
     
     ins2 = 'Study Conditions:\n\n' +  \
@@ -359,18 +359,18 @@ def block(win, test_type, path, block_type, block_number, paragraph_id):
     audio_iter = 0
     sound_playing = False
 
-    globalClock.reset()
-    kb.clearEvents()
-    kb.clock.reset()
-
+   
     if(block_type == 'D'):
         distractorTaskInstructions(win)
         if (test_type == 'Test'): 
             sendTcpTag(Stimulations.OVTK_StimulationId_Label_05)
     else:
         if (test_type == 'Test'): 
-            sendTcpTag(Stimulations.OVTK_StimulationId_Label_03)   
+            sendTcpTag(Stimulations.OVTK_StimulationId_Label_03)
 
+    globalClock.reset()
+    kb.clearEvents()
+    kb.clock.reset()
 
     while(continueOuterLoop):
 
@@ -720,8 +720,6 @@ def runExperiment(win):
     end = 'Thank you for participating!\n\nPress "SPACE" to END'
 
     introScreen(win)
-
-    instructionScreen(win, exp_intro, 'space')
     
     if( practice == 'Y'):
         instructionScreen(win, prac_test_intro, 'space')
