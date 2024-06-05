@@ -246,7 +246,7 @@ def distractorTaskInstructions(win):
 
     ins3b = '"Frequent" Tone:\n\n' +  \
     'The "Frequent" tone sounds like this:\n\n' +\
-    '\n\nPress "SPACE" for more instructions'
+    '\n\nPress "SPACE" to continue'
 
 
     instructionScreen(win, ins3, 'space')
@@ -327,6 +327,13 @@ def format_text(text, line_length=38, lines_per_page=9):
         pages.append(current_page)
 
     return pages
+
+
+def practiceHelperScreens(win, param):
+    text =  'The correct answer is {}'.format(param) +  \
+   '\n\n\n\n Press "SPACE" to continue'
+    instructionScreen(win, text, 'space')
+
 
 
 def block(win, test_type, path, block_type, block_number, paragraph_id):
@@ -520,6 +527,9 @@ def block(win, test_type, path, block_type, block_number, paragraph_id):
                                 # ignore_index=True)
                                 df_tones = df_tones.append(new_row,\
                                                             ignore_index=True)
+                            else:
+                                correctAns = count
+                                practiceHelperScreens(win, correctAns)    
 
             core.wait(0.001) # helps with the keyboard polling issue
         else: 
@@ -593,6 +603,9 @@ def questionsScreen(win, test_type, block_type,
                                               correct_ans, 'Correct': corr }
                 # df_data = pd.concat([df_data, new_row], ignore_index=True)
                 df_qa = df_qa.append(new_row, ignore_index=True)
+
+            else:
+                practiceHelperScreens(win, correct_ans)        
 
 
             kb.clearEvents()
