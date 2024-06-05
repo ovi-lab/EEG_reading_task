@@ -33,28 +33,34 @@ current_directory = os.path.dirname(__file__)
 
 
 # Preliminary setup box and variable capture
-info={'participant':''}
+info={'participant':'', 'practice': ["Y", "N"] }
 infoDlg=gui.DlgFromDict(dictionary=info, title='Setup',order=['participant'])
 if not infoDlg.OK: core.quit()
 
 PID=info['participant']
+practice = info['practice']
 blocks= ['ND','D']
 
 globalClock = core.Clock()
 routineTimer = core.Clock() 
 
 timeStamp=core.getAbsTime()
-today=datetime.date.today()
+today= datetime.date.today().strftime('%Y/ %m/ %d') 
 
-data_results_filename = "data/reading_data/"+ "data_" + PID + "_" + data.getDateStr() 
-tone_results_file_name = "data/tones/" + "tones_" + PID + "_" + data.getDateStr() 
-qa_results_file_name = "data/qa/" + "tones_" + PID + "_" + data.getDateStr() 
+data_results_filename =  os.path.join(current_directory, 'data','reading_data'\
+                                      , "data_" + PID + "_" + data.getDateStr())
+
+tone_results_file_name =  os.path.join(current_directory, 'data','tones'\
+                                      , "tones_" + PID + "_" + data.getDateStr())
+
+qa_results_file_name =  os.path.join(current_directory, 'data','qa'\
+                                      , "qa_" + PID + "_" + data.getDateStr())
 
 df_data = pd.DataFrame(columns=['PID', 'Date','Timestamp', 'BlockNo', \
                                 'BlockType', 'Paragraph_id', 'Reading_time'])
 
 df_tones = pd.DataFrame(columns=['PID', 'Date','Timestamp', 'BlockNo',\
-                                  'BlockType', 'KeyPressed', 'CorrectAns', \
+                                  'BlockType', 'Paragraph_id', 'KeyPressed', 'CorrectAns', \
                                     'Correct'])
 
 df_qa = pd.DataFrame(columns=['PID', 'Date','Timestamp', 'BlockNo', \
@@ -227,23 +233,8 @@ def messageScreen(message):
             core.quit()
 
 
-def introScreen(win):
+def distractorTaskInstructions(win):
 
-    intro1 = 'Press a key to begin experiment'
-
-    ins1 = 'Welcome to the Reading Comprehension Task\n\n' +  \
-    'Task: \n\n' +\
-    '1. Read the passage. \n' + \
-    '2. Select the correct answer. \n'+ \
-    ' \n\nPress "SPACE" for more instructions'
-    
-    ins2 = 'Study Conditions:\n\n' +  \
-    'You will participate in two types of study conditions/blocks: \n\n' +\
-    '1. Distractor Condition: You will hear distractor sounds. \n' + \
-    '2.  Quiet Condition: There will be no distractions. \n'+ \
-    ' \n\nPress "SPACE" for more instructions'
-
-        
     ins3 = 'Distractor Condition Task:\n\n' +  \
     'In the distractor condition, you will be asked to '+\
     'count the number of "ODD" sounds you hear. \n\n' +\
@@ -255,67 +246,49 @@ def introScreen(win):
 
     ins3b = '"Frequent" Tone:\n\n' +  \
     'The "Frequent" tone sounds like this:\n\n' +\
-    '\n\nPress "SPACE" for more instructions'
+    '\n\nPress "SPACE" to continue'
+
+
+    instructionScreen(win, ins3, 'space')
+    instructionScreenWithSounds(win, ins3a, 'space', aud2 )
+    instructionScreenWithSounds(win, ins3b, 'space', aud1 )
+
+def introScreen(win):
+
+    intro1 = 'Press a key to begin experiment'
+
+    ins1 = 'Welcome to the Reading Comprehension Task\n\n' +  \
+    'Task: \n\n' +\
+    '1. Read the passage. \n' + \
+    '2. Select the correct answer. \n'+ \
+    ' \n\nPress "SPACE" for more instructions'
+
+    ins1a = 'Page Controls: \n\n' +  \
+    '1. A page contains 9 lines. \n' + \
+    '2. A line consists of 40 characters (about 4-5 words). \n'+ \
+    '3. Each page lasts 12 seconds. \n'+ \
+    '4. Else, you can advance through pages by pressing "SPACE".\n'+ \
+    ' \n\nPress "SPACE" for more instructions'
+    
+    ins2 = 'Study Conditions:\n\n' +  \
+    'You will participate in two types of study conditions/blocks: \n\n' +\
+    '1. Distractor Condition: You will hear distractor sounds. \n' + \
+    '2. Quiet Condition: There will be no distractions. \n'+ \
+    ' \n\nPress "SPACE" for more instructions'
+        
+    ins3 = 'Distractor Condition Task:\n\n' +  \
+    'In the distractor condition, you will be asked to '+\
+    'count the number of "ODD" sounds you hear. \n\n' +\
+    ' \n\nPress "SPACE" for more instructions'
 
 
     instructionScreen(win, intro1 , 'anykey')
     instructionScreen(win, ins1, 'space')
+    instructionScreen(win, ins1a, 'space')
     instructionScreen(win, ins2, 'space')
-    instructionScreen(win, ins3, 'space')
 
-    instructionScreenWithSounds(win, ins3a, 'space', aud2 )
-    instructionScreenWithSounds(win, ins3b, 'space', aud1 )
+    distractorTaskInstructions(win)
     
-    
-    # ins3aToText = visual.TextStim(win, text= ins3a, pos=[0, 0], wrapWidth=1.6,\
-    #                                color='black')
-    # ins3aToText.draw()
-    # win.flip()
-    # core.wait(1)
-    # aud1.play()
-    # core.wait(1)
-    # aud1.stop()
-
-
-    # ins3bToText = visual.TextStim(win, text= ins3b, pos=[0, 0], wrapWidth=1.6,\
-    #                                color='black')  
-    # ins3bToText.draw()
-    # win.flip()
-    # core.wait(1)    
-    # aud2.play()
-    # core.wait(1)
-    # aud2.stop()
-
-    # ins3cToText = visual.TextStim(win, text= ins3c, pos=[0, 0], wrapWidth=1.6,\
-    #                                color='black')  
-    # ins3cToText.draw()
-    # win.flip()
-    # core.wait(3)
-
-
-'''def extract_sentences(path, word_count):
-    full_text = []
-
-    with open(path) as f:
-        for line in f:
-            for word in line.split():
-                full_text.append(word)
-                
-    sentences = []
-    start = 0
-    end = 0
-    num_pages =  int(len(full_text)/ word_count)  \
-        if len(full_text) % word_count ==0 \
-            else int(len(full_text)/ word_count)  +1
-    for i in range(0, num_pages):
-        end = end + word_count if end + word_count < len(full_text) else \
-            len(full_text)
-        text_range = full_text[start: end ]
-        sentence = ' '.join(text_range)
-        sentences.append(sentence)
-        start =  end
-    return sentences '''
-
 
 def read_text(path):
     with open(path,  encoding="utf8") as f:
@@ -356,6 +329,13 @@ def format_text(text, line_length=38, lines_per_page=9):
     return pages
 
 
+def practiceHelperScreens(win, param):
+    text =  'The correct answer is {}'.format(param) +  \
+   '\n\n\n\n Press "SPACE" to continue'
+    instructionScreen(win, text, 'space')
+
+
+
 def block(win, test_type, path, block_type, block_number, paragraph_id):
 
     global df_data, df_tones, word_count_per_frame 
@@ -363,10 +343,8 @@ def block(win, test_type, path, block_type, block_number, paragraph_id):
     text =  read_text(path)
 
     sentences_for_pages = format_text(text)
-
-    # sentences =  extract_sentences(path, word_count_per_frame)
+ 
     number_of_pages = len(sentences_for_pages)
-    print(number_of_pages)
 
     sound_ind = np.random.binomial(1, 0.2, 1000)
     
@@ -385,10 +363,13 @@ def block(win, test_type, path, block_type, block_number, paragraph_id):
     kb.clearEvents()
     kb.clock.reset()
 
-    if(block_type == 'D'): 
-        sendTcpTag(Stimulations.OVTK_StimulationId_Label_05)
+    if(block_type == 'D'):
+        distractorTaskInstructions(win)
+        if (test_type == 'Test'): 
+            sendTcpTag(Stimulations.OVTK_StimulationId_Label_05)
     else:
-         sendTcpTag(Stimulations.OVTK_StimulationId_Label_03)   
+        if (test_type == 'Test'): 
+            sendTcpTag(Stimulations.OVTK_StimulationId_Label_03)   
 
 
     while(continueOuterLoop):
@@ -404,11 +385,13 @@ def block(win, test_type, path, block_type, block_number, paragraph_id):
                         auds[sound_type].play()
 
                         if (sound_type):
-                            sendTcpTag(\
+                            if (test_type == 'Test'): 
+                                sendTcpTag(\
                                 Stimulations.OVTK_StimulationId_Label_01)
                             count += 1
                         else:
-                            sendTcpTag(\
+                            if (test_type == 'Test'): 
+                                sendTcpTag(\
                                 Stimulations.OVTK_StimulationId_Label_02)    
 
                         sound_playing = True
@@ -442,6 +425,7 @@ def block(win, test_type, path, block_type, block_number, paragraph_id):
                 if resp=='escape':
                     continueInnerLoop = False
                     continueOuterLoop = False
+                    save()
                     win.close()
                     sendTcpTag(Stimulations.OVTK_StimulationId_ExperimentStop)
                     core.quit()
@@ -463,10 +447,12 @@ def block(win, test_type, path, block_type, block_number, paragraph_id):
 
 
             if ((current_page_number == number_of_pages)):
-                if(block_type == 'D'): 
-                    sendTcpTag(Stimulations.OVTK_StimulationId_Label_06)
+                if(block_type == 'D'):
+                    if (test_type == 'Test'):  
+                        sendTcpTag(Stimulations.OVTK_StimulationId_Label_06)
                 else:
-                    sendTcpTag(Stimulations.OVTK_StimulationId_Label_04)   
+                    if (test_type == 'Test'): 
+                        sendTcpTag(Stimulations.OVTK_StimulationId_Label_04)   
                 continueInnerLoop = False
                 mouse.mouseClock.reset()
                 prevButtonState = mouse.getPressed()
@@ -532,7 +518,8 @@ def block(win, test_type, path, block_type, block_number, paragraph_id):
                                 new_row = {'PID':PID, 'Date':today, 
                                            'Timestamp': timeStamp,
                                             'BlockNo':block_number, 
-                                            'BlockType': block_type,  
+                                            'BlockType': block_type,
+                                            'Paragraph_id': paragraph_id,  
                                             'KeyPressed':  textbox.text , 
                                             'CorrectAns':  count, 
                                             'Correct': corr }
@@ -540,6 +527,9 @@ def block(win, test_type, path, block_type, block_number, paragraph_id):
                                 # ignore_index=True)
                                 df_tones = df_tones.append(new_row,\
                                                             ignore_index=True)
+                            else:
+                                correctAns = count
+                                practiceHelperScreens(win, correctAns)    
 
             core.wait(0.001) # helps with the keyboard polling issue
         else: 
@@ -594,6 +584,7 @@ def questionsScreen(win, test_type, block_type,
 
             if resp=='escape':
                 continueInnerLoop = False
+                save()
                 win.close()
                 sendTcpTag(Stimulations.OVTK_StimulationId_ExperimentStop)
                 core.quit()
@@ -612,6 +603,9 @@ def questionsScreen(win, test_type, block_type,
                                               correct_ans, 'Correct': corr }
                 # df_data = pd.concat([df_data, new_row], ignore_index=True)
                 df_qa = df_qa.append(new_row, ignore_index=True)
+
+            else:
+                practiceHelperScreens(win, correct_ans)        
 
 
             kb.clearEvents()
@@ -634,10 +628,10 @@ def experimentScreen(win):
     
     # reads from a condition file
     path =  os.path.join(current_directory, 'conditions','conditions.xlsx')
-    print(path)
     all_df_block_setup = pd.read_excel(path)
 
     df_block_setup = all_df_block_setup.loc[all_df_block_setup['PID'] == int(PID)]
+    df_block_setup = df_block_setup.reset_index(drop = True)
 
     #todo: do a group by for PID
     number_of_blocks = df_block_setup.shape[0]
@@ -651,7 +645,47 @@ def experimentScreen(win):
 
         block(win, 'Test', path , row["Block_type"], block_number = index, \
                paragraph_id = row["Paragraph_id"])
-                
+        
+        if not ((index +1) == number_of_blocks): 
+            expIntBlkIntervalToText = visual.TextStim(win, \
+                                                      text= expIntBlkInterval,\
+                                                        pos=[0, 0],\
+                                                          wrapWidth=1.6,\
+                                                            color='black')  
+            expIntBlkIntervalToText.draw()
+            win.flip()
+            core.wait(60)
+         
+    return True  
+
+
+def trainingScreen(win):
+
+    
+    expIntBlkInterval = 'One minute mandatory break'
+    expIntro =' Press a key to begin the practice block'
+    
+    
+    # reads from a condition file
+    path =  os.path.join(current_directory, 'conditions','conditions.xlsx')
+    all_df_block_setup = pd.read_excel(path)
+
+    df_block_setup = all_df_block_setup.loc[all_df_block_setup['PID'] == int(-1)]
+    df_block_setup = df_block_setup.reset_index(drop = True)
+
+    #todo: do a group by for PID
+    number_of_blocks = df_block_setup.shape[0]
+
+
+    for index, row in df_block_setup.iterrows():
+
+        instructionScreen(win, expIntro , 'anykey')
+        path =  os.path.join(current_directory, 'comp_materials','passages',\
+                         row["Paragraph_id"] + '.txt')
+
+        block(win, 'Practice', path , row["Block_type"], block_number = index, \
+               paragraph_id = row["Paragraph_id"])
+             
         if not ((index +1) == number_of_blocks): 
             expIntBlkIntervalToText = visual.TextStim(win, \
                                                       text= expIntBlkInterval,\
@@ -665,19 +699,21 @@ def experimentScreen(win):
     return True  
 
 def save():
-    global df_data, df_tones 
-    if (df_data.shape[0] > 0 and df_tones.shape[0] > 0 and df_qa.shape[0] > 0):
+    global df_data, df_tones, df_qa
+
+    if(df_data.shape[0] > 0):
         df_data.to_csv(data_results_filename + ".csv", encoding='utf-8',\
                         index=False)
+    if df_tones.shape[0] > 0:
         df_tones.to_csv(tone_results_file_name + ".csv", encoding='utf-8',\
                          index=False)
+    if df_qa.shape[0] > 0 :
         df_qa.to_csv(qa_results_file_name + ".csv", encoding='utf-8', \
                      index=False)
 
-
 def runExperiment(win):
 
-    prac_test_intro =  'Press "SPACE" to start the practice test'
+    prac_test_intro =  'Press "SPACE" to start the practice rounds'
 
     exp_intro =  'Press "SPACE" to start the experiment'
 
@@ -685,11 +721,11 @@ def runExperiment(win):
 
     introScreen(win)
 
-    # print(trainingTrials)
+    instructionScreen(win, exp_intro, 'space')
     
-    # if( trainingTrials == '[\'Yes\']'): 
-    #     instructionScreen(win, prac_test_intro, 'space')
-    #     # trainingScreen(win)
+    if( practice == 'Y'):
+        instructionScreen(win, prac_test_intro, 'space')
+        trainingScreen(win)
 
     instructionScreen(win, exp_intro, 'space')
     sendTcpTag(Stimulations.OVTK_StimulationId_ExperimentStart)
