@@ -262,13 +262,19 @@ def introScreen(win):
     '1. Read the passage. \n' + \
     '2. Select the correct answer. \n'+ \
     ' \n\nPress "SPACE" for more instructions'
+
+    ins1a = 'Page Controls: \n\n' +  \
+    '1. A page contains 9 lines. \n' + \
+    '2. A line consists of 40 characters (about 4-5 words). \n'+ \
+    '3. Each page lasts 12 seconds. \n'+ \
+    '4. Else, you can advance through pages by pressing "SPACE".\n'+ \
+    ' \n\nPress "SPACE" for more instructions'
     
     ins2 = 'Study Conditions:\n\n' +  \
     'You will participate in two types of study conditions/blocks: \n\n' +\
     '1. Distractor Condition: You will hear distractor sounds. \n' + \
-    '2.  Quiet Condition: There will be no distractions. \n'+ \
+    '2. Quiet Condition: There will be no distractions. \n'+ \
     ' \n\nPress "SPACE" for more instructions'
-
         
     ins3 = 'Distractor Condition Task:\n\n' +  \
     'In the distractor condition, you will be asked to '+\
@@ -278,6 +284,7 @@ def introScreen(win):
 
     instructionScreen(win, intro1 , 'anykey')
     instructionScreen(win, ins1, 'space')
+    instructionScreen(win, ins1a, 'space')
     instructionScreen(win, ins2, 'space')
 
     distractorTaskInstructions(win)
@@ -329,7 +336,7 @@ def block(win, test_type, path, block_type, block_number, paragraph_id):
     text =  read_text(path)
 
     sentences_for_pages = format_text(text)
-
+ 
     number_of_pages = len(sentences_for_pages)
 
     sound_ind = np.random.binomial(1, 0.2, 1000)
