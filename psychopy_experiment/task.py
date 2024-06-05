@@ -76,7 +76,7 @@ kb = keyboard.Keyboard(backend='ptb')
 
 # define tones
 sound_duration = 0.2 
-sound_iti = 2 # originaly 1.5
+sound_iti = 2 # originally 1.5
 sound_playing = False
 
 aud1 = sound.Sound("C", octave=5, sampleRate=44100, secs=sound_duration, \
@@ -233,10 +233,10 @@ def messageScreen(message):
             core.quit()
 
 
-def distractorTaskInstructions(win):
+def distractionTaskInstructions(win):
 
-    ins3 = 'Distractor Condition Task:\n\n' +  \
-    'In the distractor condition, you will be asked to '+\
+    ins3 = 'Distraction Condition Task:\n\n' +  \
+    'In the distraction condition, you will be asked to '+\
     'count the number of "ODD" sounds you hear. \n\n' +\
     ' \n\nPress "SPACE" for more instructions'
 
@@ -272,22 +272,17 @@ def introScreen(win):
     
     ins2 = 'Study Conditions:\n\n' +  \
     'You will participate in two types of study conditions/blocks: \n\n' +\
-    '1. Distractor Condition: You will hear distractor sounds. \n' + \
+    '1. Distraction Condition: You will hear distraction sounds. \n' + \
     '2. Quiet Condition: There will be no distractions. \n'+ \
     ' \n\nPress "SPACE" for more instructions'
         
-    ins3 = 'Distractor Condition Task:\n\n' +  \
-    'In the distractor condition, you will be asked to '+\
-    'count the number of "ODD" sounds you hear. \n\n' +\
-    ' \n\nPress "SPACE" for more instructions'
-
 
     instructionScreen(win, intro1 , 'anykey')
     instructionScreen(win, ins1, 'space')
     instructionScreen(win, ins1a, 'space')
     instructionScreen(win, ins2, 'space')
 
-    distractorTaskInstructions(win)
+    distractionTaskInstructions(win)
     
 
 def read_text(path):
@@ -361,7 +356,7 @@ def block(win, test_type, path, block_type, block_number, paragraph_id):
 
    
     if(block_type == 'D'):
-        distractorTaskInstructions(win)
+        distractionTaskInstructions(win)
         if (test_type == 'Test'): 
             sendTcpTag(Stimulations.OVTK_StimulationId_Label_05)
     else:
