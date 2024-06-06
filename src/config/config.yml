@@ -1,0 +1,42 @@
+# config values
+# all paths are relative to the root path (gitignore location)
+
+# General
+data_dir: ov_experiment/scenarios/data
+# data_format: gdf  should be gdf file by default
+
+#tools
+ov_stim_list_path: src/tools/stimulation_list.txt
+oddball_stim_path: src/tools/oddball_stimulation_groups.yaml
+electrode_layout_path: src/tools/modified_waveguard64_duke.elc
+
+#openvibe scenario
+
+
+target_channels:
+
+
+non_data_channels:
+  - Tgt
+  - SC
+  - 11L
+  - 11R
+
+notch_freqs: 60
+l_freq: 0.1
+h_freq: 30
+
+
+epoch_tmin: -0.2
+epoch_tmax: 0.6
+
+baseline_correction_l: -0.2
+baseline_correction_h: 0
+
+
+central_perital: 
+  - 7Z
+
+
+
+
