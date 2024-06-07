@@ -572,7 +572,7 @@ def questionsScreen(win, test_type, block_type,
             past_question_number +=1
 
 
-        keys = kb.getKeys(keyList = ['a','b','c','d', 'escape'], clear =True)
+        keys = kb.getKeys(keyList = ['a','b','c','d','e', 'escape'], clear =True)
 
         if(keys):
             resp = keys[0].name #take first response
