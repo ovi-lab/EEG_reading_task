@@ -12,6 +12,9 @@ import os
 import Stimulations
 from time import sleep
 
+import psutil
+import time
+
 np.random.seed(7)
 
 ### tcp tagging stuff
@@ -154,6 +157,46 @@ def to_byte(value, length):
 # connect 
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 s.connect((HOST, PORT))
+
+def get_process_by_name(process_name):
+    """Find a process by its name."""
+    for process in psutil.process_iter(['pid', 'name']):
+        if process.info['name'] == process_name:
+            return process
+    return None
+
+def check_cpu_usage(process_name, threshold=10, interval=1):
+    """Check if CPU usage of a specific process exceeds the threshold."""
+    process = get_process_by_name(process_name)
+    if not process:
+        print(f"No process found with name {process_name}")
+        return
+
+    print(f"Monitoring process {process_name} (PID: {process.pid})")
+    try:
+        cpu_usage = process.cpu_percent(interval=interval)
+            
+        if cpu_usage > threshold:
+            return True # generally when recording CPU usage> 10%
+            # print(f"CPU Usage Alert: {cpu_usage}% (exceeds {threshold}%)")
+        else:
+            # print(f"CPU Usage: {cpu_usage}%")
+            return False
+            
+        time.sleep(interval)
+    except psutil.NoSuchProcess:
+        print(f"Process {process_name} has terminated.")
+        return False
+    except KeyboardInterrupt:
+        print("Monitoring stopped.")
+        return False
+
+
+
+if (not check_cpu_usage("openvibe-designer.exe", threshold=10)):
+    print ('DATA IS NOT RECORDING')
+    win.close()
+    core.quit()
 
 
 
