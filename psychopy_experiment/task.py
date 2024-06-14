@@ -193,10 +193,10 @@ def check_cpu_usage(process_name, threshold=10, interval=1):
 
 
 
-# if (not check_cpu_usage("openvibe-designer.exe", threshold=10)):
-#     print ('DATA IS NOT RECORDING')
-#     win.close()
-#     core.quit()
+if (not check_cpu_usage("openvibe-designer.exe", threshold=10)):
+    print ('DATA IS NOT RECORDING')
+    win.close()
+    core.quit()
 
 
 
