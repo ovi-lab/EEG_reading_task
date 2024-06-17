@@ -131,7 +131,7 @@ mouse.clicked_name = []
 gotValidClick = False 
 
 
-question_stim =  visual.TextStim(win, wrapWidth=1.6, pos= (0.0, 0.25))
+question_stim =  visual.TextStim(win, wrapWidth=1.6, pos= (0.0, 0.4))
                                  
 
 answers_stim =  visual.TextBox(win, size = (1, 1), font_size = 32, 
