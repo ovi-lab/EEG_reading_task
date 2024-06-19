@@ -1,0 +1,116 @@
+82.0635 	DEBUG 	Fullscreen settings ignored as running in pilot mode.
+82.0643 	INFO 	Loaded monitor calibration from ['2023_02_15 11:47']
+84.5658 	EXP 	Created window1 = Window(allowGUI=True, allowStencil=False, autoLog=True, backendConf=UNKNOWN, backgroundFit=<method-wrapper '__getattribute__' of attributeSetter object at 0x00000187E3D92340>, backgroundImage=<method-wrapper '__getattribute__' of attributeSetter object at 0x00000187E3D922E0>, bitsMode=UNKNOWN, blendMode='avg', bpc=(8, 8, 8), color=array([0, 0, 0]), colorSpace='rgb', depthBits=8, fullscr=<method-wrapper '__getattribute__' of attributeSetter object at 0x00000187E3D92130>, gamma=None, gammaErrorPolicy='raise', infoMsg=UNKNOWN, lms=UNKNOWN, monitor=<psychopy.monitors.calibTools.Monitor object at 0x00000187E929C850>, multiSample=False, name='window1', numSamples=2, pos=[560.0, 240.0], screen=0, size=array([800, 600]), stencilBits=0, stereo=False, title='PsychoPy', units='height', useFBO=True, useRetina=False, viewOri=0.0, viewPos=None, viewScale=None, waitBlanking=True, winType='pyglet')
+84.5659 	EXP 	window1: mouseVisible = True
+84.5659 	EXP 	window1: backgroundImage = ''
+84.5659 	EXP 	window1: backgroundFit = 'none'
+84.5661 	EXP 	window1: mouseVisible = True
+84.5663 	EXP 	window1: mouseVisible = True
+84.5797 	EXP 	window1: mouseVisible = True
+84.5804 	EXP 	window1: mouseVisible = True
+84.6431 	DEBUG 	TextBox2 loaded 1 chars with 0 blanks and 1 valid
+84.6449 	DEBUG 	TextBox2 loaded 1 chars with 0 blanks and 1 valid
+84.6466 	DEBUG 	TextBox2 loaded 1 chars with 0 blanks and 1 valid
+84.6485 	DEBUG 	TextBox2 loaded 1 chars with 0 blanks and 1 valid
+84.6504 	DEBUG 	TextBox2 loaded 1 chars with 0 blanks and 1 valid
+84.6519 	DEBUG 	TextBox2 loaded 1 chars with 0 blanks and 1 valid
+84.6536 	DEBUG 	TextBox2 loaded 1 chars with 0 blanks and 1 valid
+84.6556 	DEBUG 	TextBox2 loaded 1 chars with 0 blanks and 1 valid
+84.6569 	DEBUG 	TextBox2 loaded 1 chars with 0 blanks and 1 valid
+84.6582 	DEBUG 	TextBox2 loaded 1 chars with 0 blanks and 1 valid
+84.6599 	DEBUG 	TextBox2 loaded 1 chars with 0 blanks and 1 valid
+84.6617 	DEBUG 	TextBox2 loaded 1 chars with 0 blanks and 1 valid
+84.6633 	DEBUG 	TextBox2 loaded 1 chars with 0 blanks and 1 valid
+84.6651 	DEBUG 	TextBox2 loaded 1 chars with 0 blanks and 1 valid
+84.6667 	DEBUG 	TextBox2 loaded 1 chars with 0 blanks and 1 valid
+84.6685 	DEBUG 	TextBox2 loaded 1 chars with 0 blanks and 1 valid
+84.6703 	DEBUG 	TextBox2 loaded 1 chars with 0 blanks and 1 valid
+84.6717 	DEBUG 	TextBox2 loaded 1 chars with 0 blanks and 1 valid
+84.6732 	DEBUG 	TextBox2 loaded 1 chars with 0 blanks and 1 valid
+84.6752 	DEBUG 	TextBox2 loaded 1 chars with 0 blanks and 1 valid
+84.6766 	DEBUG 	TextBox2 loaded 1 chars with 0 blanks and 1 valid
+84.6826 	DEBUG 	Uploading Texture Font fontname to graphics card
+84.7089 	DEBUG 	Upload of Texture Font fontname complete
+84.7105 	EXP 	window1: mouseVisible = True
+84.7107 	EXP 	window1: mouseVisible = True
+84.7114 	EXP 	window1: mouseVisible = True
+84.7120 	EXP 	window1: mouseVisible = True
+84.7258 	DEBUG 	TextBox2 loaded 1 chars with 0 blanks and 1 valid
+84.7278 	DEBUG 	TextBox2 loaded 1 chars with 0 blanks and 1 valid
+84.7297 	DEBUG 	TextBox2 loaded 1 chars with 0 blanks and 1 valid
+84.7299 	DEBUG 	Uploading Texture Font fontname to graphics card
+84.7482 	DEBUG 	Upload of Texture Font fontname complete
+84.7559 	EXP 	window1: Attempting to measure frame rate of screen (0) ...
+84.7559 	EXP 	window1: recordFrameIntervals = False
+84.9832 	EXP 	window1: recordFrameIntervals = True
+85.1666 	EXP 	Screen (0) actual frame rate measured at 60.05Hz
+85.1667 	EXP 	window1: recordFrameIntervals = False
+85.1667 	EXP 	window1: mouseVisible = False
+85.1671 	EXP 	window1: mouseVisible = True
+85.1672 	EXP 	window1: mouseVisible = True
+85.1680 	EXP 	window1: mouseVisible = True
+85.1687 	EXP 	window1: mouseVisible = True
+85.1829 	DEBUG 	TextBox2 loaded 1 chars with 0 blanks and 1 valid
+85.1896 	DEBUG 	TextBox2 loaded 1 chars with 0 blanks and 1 valid
+85.1915 	DEBUG 	TextBox2 loaded 1 chars with 0 blanks and 1 valid
+85.1936 	DEBUG 	TextBox2 loaded 1 chars with 0 blanks and 1 valid
+85.1955 	DEBUG 	TextBox2 loaded 1 chars with 0 blanks and 1 valid
+85.1974 	DEBUG 	TextBox2 loaded 1 chars with 0 blanks and 1 valid
+85.1989 	DEBUG 	TextBox2 loaded 1 chars with 0 blanks and 1 valid
+85.2011 	DEBUG 	TextBox2 loaded 1 chars with 0 blanks and 1 valid
+85.2031 	DEBUG 	TextBox2 loaded 1 chars with 0 blanks and 1 valid
+85.2050 	DEBUG 	TextBox2 loaded 1 chars with 0 blanks and 1 valid
+85.2053 	DEBUG 	Uploading Texture Font fontname to graphics card
+85.2060 	DEBUG 	Upload of Texture Font fontname complete
+85.2077 	EXP 	window1: mouseVisible = True
+85.2078 	EXP 	window1: mouseVisible = True
+85.2085 	EXP 	window1: mouseVisible = True
+85.2091 	EXP 	window1: mouseVisible = True
+85.3128 	WARNING 	launchHubServer: If using the iohub mouse or eyetracker devices, fullScr should be True.
+89.5317 	INFO 	keyboard.Keyboard is using iohub backend.
+89.5317 	EXP 	slider: status = STARTED
+89.5926 	EXP 	window1: mouseVisible = True
+89.5931 	EXP 	window1: mouseVisible = True
+89.6020 	EXP 	window1: mouseVisible = True
+89.6035 	EXP 	window1: mouseVisible = True
+89.6263 	EXP 	Created slider = Slider(__class__=<class 'psychopy.visual.slider.Slider'>, autoDraw=False, autoLog=True, borderColor=None, color=None, colorSpace='rgb', depth=0, fillColor=None, flip=False, font='Open Sans', granularity=1.0, labelColor=None, labelHeight=0.05, labelWrapWidth=None, labels=None, lineColor=None, markerColor=None, name='slider', opacity=None, ori=0.0, pos=array([ 0. , -0.4]), readOnly=False, self=UNKNOWN, size=array([1. , 0.1]), startValue=None, style='slider', styleTweaks=[], ticks=array([1, 2, 3, 4, 5, 6, 7]), units='height', win=Window(...))
+0.0228 	EXP 	slider: autoLog = True
+0.0228 	EXP 	slider: styleTweaks = []
+0.0228 	EXP 	slider: styleTweaks = []
+0.0228 	EXP 	slider: styleTweaks = []
+0.0228 	EXP 	slider: styleTweaks = []
+0.0228 	EXP 	slider: contrast = 1.0
+0.0228 	EXP 	slider: markerPos = None
+0.0228 	EXP 	slider: autoLog = True
+0.0762 	EXP 	slider: markerPos = None
+0.0762 	EXP 	slider: markerPos = None
+0.0762 	EXP 	slider: autoDraw = True
+2.3076 	DATA 	Mouse: Left button down, pos=(216,44)
+2.3374 	EXP 	slider: markerPos = 2.16
+2.3546 	EXP 	slider: markerPos = 2.16
+2.3713 	EXP 	slider: markerPos = 2.16
+2.3879 	EXP 	slider: markerPos = 2.16
+2.4045 	EXP 	slider: markerPos = 2.16
+2.4212 	EXP 	slider: markerPos = 2.16
+2.4379 	EXP 	slider: markerPos = 2.16
+2.4551 	EXP 	slider: markerPos = 2.16
+2.4711 	EXP 	slider: markerPos = 2.28
+2.4880 	EXP 	slider: markerPos = 2.3499999999999996
+2.5046 	EXP 	slider: markerPos = 2.5300000000000002
+2.5211 	EXP 	slider: markerPos = 2.79
+2.5380 	EXP 	slider: markerPos = 2.92
+2.5544 	EXP 	slider: markerPos = 3.0300000000000002
+2.5713 	EXP 	slider: markerPos = 3.09
+2.5879 	EXP 	slider: markerPos = 3.0999999999999996
+2.6044 	EXP 	slider: markerPos = 3.12
+2.6211 	EXP 	slider: markerPos = 3.12
+2.6379 	EXP 	slider: markerPos = 3.13
+2.6467 	DATA 	Mouse:  Left button up, pos=(314,44)
+2.6544 	EXP 	slider: markerPos = 3.14
+2.6714 	EXP 	slider: markerPos = 3.0
+2.6882 	EXP 	slider: autoDraw = False
+2.6908 	EXP 	slider: status = STOPPED
+2.6983 	INFO 	saved data to 'C:\\Users\\erang\\Desktop\\Reading_task\\psychopy_experiment\\data/363789_slider_2024-06-19_13h50.05.204.csv'
+2.6988 	INFO 	saved data to C:\Users\erang\Desktop\Reading_task\psychopy_experiment\data/363789_slider_2024-06-19_13h50.05.204.psydat
+2.7308 	EXP 	window1: mouseVisible = True
+3.0079 	DEBUG 	Saving data for slider ExperimentHandler

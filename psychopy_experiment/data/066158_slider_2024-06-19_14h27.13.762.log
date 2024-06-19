@@ -1,0 +1,354 @@
+8.7014 	DEBUG 	Fullscreen settings ignored as running in pilot mode.
+8.7023 	INFO 	Loaded monitor calibration from ['2023_02_15 11:47']
+9.7486 	EXP 	Created window1 = Window(allowGUI=True, allowStencil=False, autoLog=True, backendConf=UNKNOWN, backgroundFit=<method-wrapper '__getattribute__' of attributeSetter object at 0x000001F78A341640>, backgroundImage=<method-wrapper '__getattribute__' of attributeSetter object at 0x000001F78A3415E0>, bitsMode=UNKNOWN, blendMode='avg', bpc=(8, 8, 8), color=array([0, 0, 0]), colorSpace='rgb', depthBits=8, fullscr=<method-wrapper '__getattribute__' of attributeSetter object at 0x000001F78A341430>, gamma=None, gammaErrorPolicy='raise', infoMsg=UNKNOWN, lms=UNKNOWN, monitor=<psychopy.monitors.calibTools.Monitor object at 0x000001F78F80AB50>, multiSample=False, name='window1', numSamples=2, pos=[560.0, 240.0], screen=0, size=array([800, 600]), stencilBits=0, stereo=False, title='PsychoPy', units='height', useFBO=True, useRetina=False, viewOri=0.0, viewPos=None, viewScale=None, waitBlanking=True, winType='pyglet')
+9.7490 	EXP 	window1: mouseVisible = True
+9.7490 	EXP 	window1: backgroundImage = ''
+9.7490 	EXP 	window1: backgroundFit = 'none'
+9.7492 	EXP 	window1: mouseVisible = True
+9.7494 	EXP 	window1: mouseVisible = True
+9.7512 	EXP 	window1: mouseVisible = True
+9.7518 	EXP 	window1: mouseVisible = True
+9.7684 	DEBUG 	TextBox2 loaded 1 chars with 0 blanks and 1 valid
+9.7701 	DEBUG 	TextBox2 loaded 1 chars with 0 blanks and 1 valid
+9.7722 	DEBUG 	TextBox2 loaded 1 chars with 0 blanks and 1 valid
+9.7742 	DEBUG 	TextBox2 loaded 1 chars with 0 blanks and 1 valid
+9.7761 	DEBUG 	TextBox2 loaded 1 chars with 0 blanks and 1 valid
+9.7776 	DEBUG 	TextBox2 loaded 1 chars with 0 blanks and 1 valid
+9.7793 	DEBUG 	TextBox2 loaded 1 chars with 0 blanks and 1 valid
+9.7813 	DEBUG 	TextBox2 loaded 1 chars with 0 blanks and 1 valid
+9.7826 	DEBUG 	TextBox2 loaded 1 chars with 0 blanks and 1 valid
+9.7840 	DEBUG 	TextBox2 loaded 1 chars with 0 blanks and 1 valid
+9.7857 	DEBUG 	TextBox2 loaded 1 chars with 0 blanks and 1 valid
+9.7879 	DEBUG 	TextBox2 loaded 1 chars with 0 blanks and 1 valid
+9.7897 	DEBUG 	TextBox2 loaded 1 chars with 0 blanks and 1 valid
+9.7914 	DEBUG 	TextBox2 loaded 1 chars with 0 blanks and 1 valid
+9.7931 	DEBUG 	TextBox2 loaded 1 chars with 0 blanks and 1 valid
+9.7948 	DEBUG 	TextBox2 loaded 1 chars with 0 blanks and 1 valid
+9.7966 	DEBUG 	TextBox2 loaded 1 chars with 0 blanks and 1 valid
+9.7980 	DEBUG 	TextBox2 loaded 1 chars with 0 blanks and 1 valid
+9.7995 	DEBUG 	TextBox2 loaded 1 chars with 0 blanks and 1 valid
+9.8015 	DEBUG 	TextBox2 loaded 1 chars with 0 blanks and 1 valid
+9.8030 	DEBUG 	TextBox2 loaded 1 chars with 0 blanks and 1 valid
+9.8033 	DEBUG 	Uploading Texture Font fontname to graphics card
+9.8225 	DEBUG 	Upload of Texture Font fontname complete
+9.8241 	EXP 	window1: mouseVisible = True
+9.8242 	EXP 	window1: mouseVisible = True
+9.8249 	EXP 	window1: mouseVisible = True
+9.8256 	EXP 	window1: mouseVisible = True
+9.8396 	DEBUG 	TextBox2 loaded 1 chars with 0 blanks and 1 valid
+9.8416 	DEBUG 	TextBox2 loaded 1 chars with 0 blanks and 1 valid
+9.8435 	DEBUG 	TextBox2 loaded 1 chars with 0 blanks and 1 valid
+9.8438 	DEBUG 	Uploading Texture Font fontname to graphics card
+9.8629 	DEBUG 	Upload of Texture Font fontname complete
+9.8651 	EXP 	window1: Attempting to measure frame rate of screen (0) ...
+9.8651 	EXP 	window1: recordFrameIntervals = False
+10.0392 	EXP 	window1: recordFrameIntervals = True
+10.2225 	EXP 	Screen (0) actual frame rate measured at 60.11Hz
+10.2225 	EXP 	window1: recordFrameIntervals = False
+10.2226 	EXP 	window1: mouseVisible = False
+10.2229 	EXP 	window1: mouseVisible = True
+10.2231 	EXP 	window1: mouseVisible = True
+10.2239 	EXP 	window1: mouseVisible = True
+10.2245 	EXP 	window1: mouseVisible = True
+10.2384 	DEBUG 	TextBox2 loaded 1 chars with 0 blanks and 1 valid
+10.2400 	DEBUG 	TextBox2 loaded 1 chars with 0 blanks and 1 valid
+10.2419 	DEBUG 	TextBox2 loaded 1 chars with 0 blanks and 1 valid
+10.2440 	DEBUG 	TextBox2 loaded 1 chars with 0 blanks and 1 valid
+10.2459 	DEBUG 	TextBox2 loaded 1 chars with 0 blanks and 1 valid
+10.2479 	DEBUG 	TextBox2 loaded 1 chars with 0 blanks and 1 valid
+10.2495 	DEBUG 	TextBox2 loaded 1 chars with 0 blanks and 1 valid
+10.2513 	DEBUG 	TextBox2 loaded 1 chars with 0 blanks and 1 valid
+10.2534 	DEBUG 	TextBox2 loaded 1 chars with 0 blanks and 1 valid
+10.2554 	DEBUG 	TextBox2 loaded 1 chars with 0 blanks and 1 valid
+10.2558 	DEBUG 	Uploading Texture Font fontname to graphics card
+10.2564 	DEBUG 	Upload of Texture Font fontname complete
+10.2581 	EXP 	window1: mouseVisible = True
+10.2582 	EXP 	window1: mouseVisible = True
+10.2589 	EXP 	window1: mouseVisible = True
+10.2595 	EXP 	window1: mouseVisible = True
+10.3190 	WARNING 	launchHubServer: If using the iohub mouse or eyetracker devices, fullScr should be True.
+13.6192 	INFO 	keyboard.Keyboard is using iohub backend.
+13.6193 	EXP 	slider: status = STARTED
+13.6272 	EXP 	window1: mouseVisible = True
+13.6277 	EXP 	window1: mouseVisible = True
+13.6298 	EXP 	window1: mouseVisible = True
+13.6300 	EXP 	window1: mouseVisible = True
+13.6306 	EXP 	window1: mouseVisible = True
+13.6311 	EXP 	window1: mouseVisible = True
+13.6458 	DEBUG 	TextBox2 loaded 1 chars with 0 blanks and 1 valid
+13.6477 	DEBUG 	TextBox2 loaded 1 chars with 0 blanks and 1 valid
+13.6499 	DEBUG 	TextBox2 loaded 1 chars with 0 blanks and 1 valid
+13.6518 	DEBUG 	TextBox2 loaded 1 chars with 0 blanks and 1 valid
+13.6521 	DEBUG 	Uploading Texture Font fontname to graphics card
+13.6537 	DEBUG 	Upload of Texture Font fontname complete
+13.6558 	EXP 	window1: mouseVisible = True
+13.6560 	EXP 	window1: mouseVisible = True
+13.6567 	EXP 	window1: mouseVisible = True
+13.6573 	EXP 	window1: mouseVisible = True
+13.6726 	EXP 	window1: mouseVisible = True
+13.6727 	EXP 	window1: mouseVisible = True
+13.6734 	EXP 	window1: mouseVisible = True
+13.6740 	EXP 	window1: mouseVisible = True
+13.6899 	DEBUG 	TextBox2 loaded 1 chars with 0 blanks and 1 valid
+13.6902 	DEBUG 	Uploading Texture Font fontname to graphics card
+13.7035 	DEBUG 	Upload of Texture Font fontname complete
+13.7055 	EXP 	window1: mouseVisible = True
+13.7057 	EXP 	window1: mouseVisible = True
+13.7063 	EXP 	window1: mouseVisible = True
+13.7069 	EXP 	window1: mouseVisible = True
+13.7209 	EXP 	window1: mouseVisible = True
+13.7246 	EXP 	window1: mouseVisible = True
+13.7688 	EXP 	Created slider = Slider(__class__=<class 'psychopy.visual.slider.Slider'>, autoDraw=False, autoLog=True, borderColor=None, color=None, colorSpace='rgb', depth=0, fillColor=None, flip=False, font='Open Sans', granularity=0.0, labelColor=None, labelHeight=0.05, labelWrapWidth=None, labels=['Not at all (0%)', 'All of it (100%)'], lineColor=None, markerColor=None, name='slider', opacity=None, ori=0.0, pos=array([ 0. , -0.2]), readOnly=False, self=UNKNOWN, size=array([1. , 0.1]), startValue=None, style='slider', styleTweaks=['labels45', 'triangleMarker'], ticks=array([  0, 100]), units='height', win=Window(...))
+0.0216 	EXP 	slider: autoLog = True
+0.0216 	EXP 	slider: styleTweaks = []
+0.0216 	EXP 	slider: styleTweaks = []
+0.0216 	EXP 	slider: styleTweaks = ['labels45', 'triangleMarker']
+0.0216 	EXP 	slider: styleTweaks = ['labels45', 'triangleMarker']
+0.0216 	EXP 	slider: contrast = 1.0
+0.0216 	EXP 	slider: markerPos = None
+0.0216 	EXP 	slider: autoLog = True
+0.0701 	EXP 	slider: markerPos = None
+0.0701 	EXP 	slider: markerPos = None
+0.0701 	EXP 	slider: autoDraw = True
+49.6264 	DATA 	Mouse: Left button down, pos=(187,171)
+49.6521 	EXP 	slider: markerPos = 14.500000000000002
+49.6687 	EXP 	slider: markerPos = 14.500000000000002
+49.6856 	EXP 	slider: markerPos = 14.500000000000002
+49.7019 	EXP 	slider: markerPos = 14.500000000000002
+49.7187 	EXP 	slider: markerPos = 14.500000000000002
+49.7355 	EXP 	slider: markerPos = 14.500000000000002
+49.7519 	EXP 	slider: markerPos = 14.500000000000002
+49.7686 	EXP 	slider: markerPos = 14.500000000000002
+49.7855 	EXP 	slider: markerPos = 14.500000000000002
+49.8019 	EXP 	slider: markerPos = 14.500000000000002
+49.8187 	EXP 	slider: markerPos = 14.500000000000002
+49.8355 	EXP 	slider: markerPos = 14.500000000000002
+49.8524 	EXP 	slider: markerPos = 14.833333333333332
+49.8687 	EXP 	slider: markerPos = 17.166666666666668
+49.8854 	EXP 	slider: markerPos = 21.333333333333332
+49.9020 	EXP 	slider: markerPos = 27.500000000000004
+49.9184 	EXP 	slider: markerPos = 35.0
+49.9354 	EXP 	slider: markerPos = 40.0
+49.9520 	EXP 	slider: markerPos = 42.833333333333336
+49.9684 	EXP 	slider: markerPos = 43.666666666666664
+49.9851 	EXP 	slider: markerPos = 43.666666666666664
+50.0018 	EXP 	slider: markerPos = 43.666666666666664
+50.0183 	EXP 	slider: markerPos = 43.666666666666664
+50.0352 	EXP 	slider: markerPos = 43.666666666666664
+50.0518 	EXP 	slider: markerPos = 43.666666666666664
+50.0683 	EXP 	slider: markerPos = 43.666666666666664
+50.0852 	EXP 	slider: markerPos = 43.666666666666664
+50.1018 	EXP 	slider: markerPos = 43.666666666666664
+50.1183 	EXP 	slider: markerPos = 43.666666666666664
+50.1352 	EXP 	slider: markerPos = 43.666666666666664
+50.1464 	DATA 	Mouse:  Left button up, pos=(362,150)
+50.1517 	EXP 	slider: markerPos = 43.666666666666664
+50.1683 	EXP 	slider: markerPos = 43.666666666666664
+51.1062 	DATA 	Mouse: Left button down, pos=(389,181)
+51.1183 	EXP 	slider: markerPos = 48.16666666666667
+51.1350 	EXP 	slider: markerPos = 48.16666666666667
+51.1514 	EXP 	slider: markerPos = 48.16666666666667
+51.1682 	EXP 	slider: markerPos = 48.16666666666667
+51.1851 	EXP 	slider: markerPos = 48.16666666666667
+51.2015 	EXP 	slider: markerPos = 48.16666666666667
+51.2127 	DATA 	Mouse:  Left button up, pos=(389,181)
+51.2182 	EXP 	slider: markerPos = 48.16666666666667
+51.2350 	EXP 	slider: markerPos = 48.16666666666667
+51.4379 	DATA 	Mouse: Left button down, pos=(407,180)
+51.4514 	EXP 	slider: markerPos = 51.16666666666667
+51.4680 	EXP 	slider: markerPos = 51.16666666666667
+51.4848 	EXP 	slider: markerPos = 51.16666666666667
+51.5012 	EXP 	slider: markerPos = 51.16666666666667
+51.5179 	EXP 	slider: markerPos = 51.16666666666667
+51.5347 	EXP 	slider: markerPos = 51.16666666666667
+51.5376 	DATA 	Mouse:  Left button up, pos=(407,180)
+51.5512 	EXP 	slider: markerPos = 51.16666666666667
+52.0600 	DATA 	Mouse: Left button down, pos=(416,155)
+52.0848 	EXP 	slider: markerPos = 52.666666666666664
+52.1014 	EXP 	slider: markerPos = 52.666666666666664
+52.1177 	EXP 	slider: markerPos = 52.666666666666664
+52.1347 	EXP 	slider: markerPos = 52.666666666666664
+52.1513 	EXP 	slider: markerPos = 52.666666666666664
+52.1679 	EXP 	slider: markerPos = 52.666666666666664
+52.1788 	DATA 	Mouse:  Left button up, pos=(416,155)
+52.1847 	EXP 	slider: markerPos = 52.666666666666664
+52.2012 	EXP 	slider: markerPos = 52.666666666666664
+52.5047 	DATA 	Mouse: Left button down, pos=(365,152)
+52.5176 	EXP 	slider: markerPos = 44.166666666666664
+52.5347 	EXP 	slider: markerPos = 44.166666666666664
+52.5511 	EXP 	slider: markerPos = 44.166666666666664
+52.5677 	EXP 	slider: markerPos = 44.166666666666664
+52.5845 	EXP 	slider: markerPos = 44.166666666666664
+52.6009 	EXP 	slider: markerPos = 44.166666666666664
+52.6177 	EXP 	slider: markerPos = 44.166666666666664
+52.6206 	DATA 	Mouse:  Left button up, pos=(365,152)
+52.6346 	EXP 	slider: markerPos = 44.166666666666664
+52.8543 	DATA 	Mouse: Left button down, pos=(285,161)
+52.8674 	EXP 	slider: markerPos = 30.833333333333336
+52.8844 	EXP 	slider: markerPos = 30.833333333333336
+52.9010 	EXP 	slider: markerPos = 30.833333333333336
+52.9176 	EXP 	slider: markerPos = 30.833333333333336
+52.9345 	EXP 	slider: markerPos = 30.833333333333336
+52.9455 	DATA 	Mouse:  Left button up, pos=(285,161)
+52.9509 	EXP 	slider: markerPos = 30.833333333333336
+52.9676 	EXP 	slider: markerPos = 30.833333333333336
+53.1540 	DATA 	Mouse: Left button down, pos=(257,164)
+53.1675 	EXP 	slider: markerPos = 26.166666666666664
+53.1842 	EXP 	slider: markerPos = 26.166666666666664
+53.2010 	EXP 	slider: markerPos = 26.166666666666664
+53.2176 	EXP 	slider: markerPos = 26.166666666666664
+53.2342 	EXP 	slider: markerPos = 26.166666666666664
+53.2372 	DATA 	Mouse:  Left button up, pos=(257,164)
+53.2510 	EXP 	slider: markerPos = 26.166666666666664
+53.4267 	DATA 	Mouse: Left button down, pos=(371,161)
+53.4509 	EXP 	slider: markerPos = 45.166666666666664
+53.4675 	EXP 	slider: markerPos = 45.166666666666664
+53.4842 	EXP 	slider: markerPos = 45.166666666666664
+53.5006 	EXP 	slider: markerPos = 45.166666666666664
+53.5179 	EXP 	slider: markerPos = 45.166666666666664
+53.5210 	DATA 	Mouse:  Left button up, pos=(371,161)
+53.5342 	EXP 	slider: markerPos = 45.166666666666664
+53.7750 	DATA 	Mouse: Left button down, pos=(472,165)
+53.8005 	EXP 	slider: markerPos = 62.0
+53.8174 	EXP 	slider: markerPos = 62.0
+53.8342 	EXP 	slider: markerPos = 62.0
+53.8505 	EXP 	slider: markerPos = 62.0
+53.8674 	EXP 	slider: markerPos = 62.0
+53.8786 	DATA 	Mouse:  Left button up, pos=(472,165)
+53.8842 	EXP 	slider: markerPos = 62.0
+53.9009 	EXP 	slider: markerPos = 62.0
+55.1702 	DATA 	Mouse: Left button down, pos=(100,167)
+55.1836 	EXP 	slider: markerPos = 0.0
+55.2003 	EXP 	slider: markerPos = 0.3333333333333355
+55.2168 	EXP 	slider: markerPos = 0.3333333333333355
+55.2339 	EXP 	slider: markerPos = 0.5000000000000004
+55.2503 	EXP 	slider: markerPos = 0.5000000000000004
+55.2668 	EXP 	slider: markerPos = 0.6666666666666654
+55.2835 	EXP 	slider: markerPos = 1.0000000000000009
+55.3002 	EXP 	slider: markerPos = 2.0000000000000018
+55.3168 	EXP 	slider: markerPos = 3.166666666666668
+55.3333 	EXP 	slider: markerPos = 6.333333333333336
+55.3500 	EXP 	slider: markerPos = 10.833333333333334
+55.3668 	EXP 	slider: markerPos = 22.166666666666668
+55.3834 	EXP 	slider: markerPos = 30.666666666666664
+55.4003 	EXP 	slider: markerPos = 37.666666666666664
+55.4166 	EXP 	slider: markerPos = 43.333333333333336
+55.4334 	EXP 	slider: markerPos = 48.0
+55.4502 	EXP 	slider: markerPos = 51.66666666666667
+55.4668 	EXP 	slider: markerPos = 54.333333333333336
+55.4835 	EXP 	slider: markerPos = 55.166666666666664
+55.5002 	EXP 	slider: markerPos = 57.00000000000001
+55.5166 	EXP 	slider: markerPos = 57.333333333333336
+55.5334 	EXP 	slider: markerPos = 57.833333333333336
+55.5502 	EXP 	slider: markerPos = 58.333333333333336
+55.5667 	EXP 	slider: markerPos = 59.5
+55.5835 	EXP 	slider: markerPos = 60.33333333333333
+55.6000 	EXP 	slider: markerPos = 61.33333333333333
+55.6168 	EXP 	slider: markerPos = 61.83333333333333
+55.6334 	EXP 	slider: markerPos = 62.33333333333333
+55.6501 	EXP 	slider: markerPos = 63.33333333333333
+55.6666 	EXP 	slider: markerPos = 63.66666666666667
+55.6834 	EXP 	slider: markerPos = 64.0
+55.7001 	EXP 	slider: markerPos = 64.33333333333333
+55.7166 	EXP 	slider: markerPos = 64.33333333333333
+55.7334 	EXP 	slider: markerPos = 64.33333333333333
+55.7500 	EXP 	slider: markerPos = 64.33333333333333
+55.7667 	EXP 	slider: markerPos = 64.33333333333333
+55.7833 	EXP 	slider: markerPos = 64.33333333333333
+55.8000 	EXP 	slider: markerPos = 64.33333333333333
+55.8165 	EXP 	slider: markerPos = 64.33333333333333
+55.8334 	EXP 	slider: markerPos = 64.33333333333333
+55.8500 	EXP 	slider: markerPos = 64.33333333333333
+55.8665 	EXP 	slider: markerPos = 64.33333333333333
+55.8834 	EXP 	slider: markerPos = 64.33333333333333
+55.9001 	EXP 	slider: markerPos = 64.33333333333333
+55.9167 	EXP 	slider: markerPos = 64.33333333333333
+55.9339 	EXP 	slider: markerPos = 64.33333333333333
+55.9503 	EXP 	slider: markerPos = 64.33333333333333
+55.9668 	EXP 	slider: markerPos = 64.33333333333333
+55.9834 	EXP 	slider: markerPos = 64.33333333333333
+56.0001 	EXP 	slider: markerPos = 64.33333333333333
+56.0164 	EXP 	slider: markerPos = 64.33333333333333
+56.0333 	EXP 	slider: markerPos = 64.33333333333333
+56.0500 	EXP 	slider: markerPos = 64.33333333333333
+56.0665 	EXP 	slider: markerPos = 64.33333333333333
+56.0834 	EXP 	slider: markerPos = 64.33333333333333
+56.1000 	EXP 	slider: markerPos = 64.33333333333333
+56.1165 	EXP 	slider: markerPos = 64.33333333333333
+56.1333 	EXP 	slider: markerPos = 64.33333333333333
+56.1499 	EXP 	slider: markerPos = 64.33333333333333
+56.1667 	EXP 	slider: markerPos = 64.33333333333333
+56.1833 	EXP 	slider: markerPos = 63.16666666666666
+56.2000 	EXP 	slider: markerPos = 61.0
+56.2164 	EXP 	slider: markerPos = 57.666666666666664
+56.2334 	EXP 	slider: markerPos = 54.50000000000001
+56.2499 	EXP 	slider: markerPos = 50.83333333333333
+56.2667 	EXP 	slider: markerPos = 46.666666666666664
+56.2834 	EXP 	slider: markerPos = 45.33333333333333
+56.3000 	EXP 	slider: markerPos = 45.166666666666664
+56.3165 	EXP 	slider: markerPos = 44.833333333333336
+56.3332 	EXP 	slider: markerPos = 44.833333333333336
+56.3500 	EXP 	slider: markerPos = 44.833333333333336
+56.3665 	EXP 	slider: markerPos = 44.833333333333336
+56.3832 	EXP 	slider: markerPos = 44.833333333333336
+56.4000 	EXP 	slider: markerPos = 44.833333333333336
+56.4165 	EXP 	slider: markerPos = 44.833333333333336
+56.4332 	EXP 	slider: markerPos = 44.833333333333336
+56.4500 	EXP 	slider: markerPos = 44.833333333333336
+56.4665 	EXP 	slider: markerPos = 44.833333333333336
+56.4833 	EXP 	slider: markerPos = 44.833333333333336
+56.4998 	EXP 	slider: markerPos = 44.833333333333336
+56.5166 	EXP 	slider: markerPos = 44.833333333333336
+56.5334 	EXP 	slider: markerPos = 44.833333333333336
+56.5498 	EXP 	slider: markerPos = 44.833333333333336
+56.5664 	EXP 	slider: markerPos = 44.833333333333336
+56.5833 	EXP 	slider: markerPos = 44.833333333333336
+56.5940 	DATA 	Mouse:  Left button up, pos=(369,127)
+56.5998 	EXP 	slider: markerPos = 44.833333333333336
+56.6169 	EXP 	slider: markerPos = 44.833333333333336
+57.0806 	DATA 	Mouse: Left button down, pos=(644,190)
+57.1161 	EXP 	slider: markerPos = 90.66666666666667
+57.1490 	EXP 	slider: markerPos = 90.66666666666667
+57.1662 	EXP 	slider: markerPos = 90.66666666666667
+57.1828 	EXP 	slider: markerPos = 90.66666666666667
+57.2006 	EXP 	slider: markerPos = 90.66666666666667
+57.2146 	DATA 	Mouse:  Left button up, pos=(644,190)
+57.2325 	EXP 	slider: markerPos = 90.66666666666667
+57.2493 	EXP 	slider: markerPos = 90.66666666666667
+57.5194 	DATA 	Mouse: Left button down, pos=(507,185)
+57.5330 	EXP 	slider: markerPos = 67.83333333333333
+57.5495 	EXP 	slider: markerPos = 67.83333333333333
+57.5664 	EXP 	slider: markerPos = 67.83333333333333
+57.5829 	EXP 	slider: markerPos = 67.83333333333333
+57.5995 	EXP 	slider: markerPos = 67.83333333333333
+57.6163 	EXP 	slider: markerPos = 67.83333333333333
+57.6194 	DATA 	Mouse:  Left button up, pos=(507,185)
+57.6328 	EXP 	slider: markerPos = 67.83333333333333
+57.8696 	DATA 	Mouse: Left button down, pos=(370,199)
+57.8828 	EXP 	slider: markerPos = 45.0
+57.8994 	EXP 	slider: markerPos = 45.0
+57.9165 	EXP 	slider: markerPos = 45.0
+57.9327 	EXP 	slider: markerPos = 45.0
+57.9496 	EXP 	slider: markerPos = 45.0
+57.9666 	EXP 	slider: markerPos = 45.0
+57.9784 	DATA 	Mouse:  Left button up, pos=(370,199)
+57.9835 	EXP 	slider: markerPos = 45.0
+58.0169 	EXP 	slider: markerPos = 45.0
+60.8071 	DATA 	Mouse: Left button down, pos=(502,175)
+60.8322 	EXP 	slider: markerPos = 67.0
+60.8488 	EXP 	slider: markerPos = 67.0
+60.8657 	EXP 	slider: markerPos = 67.0
+60.8822 	EXP 	slider: markerPos = 67.0
+60.8990 	EXP 	slider: markerPos = 67.0
+60.9021 	DATA 	Mouse:  Left button up, pos=(502,175)
+60.9156 	EXP 	slider: markerPos = 67.0
+64.2671 	DATA 	Mouse: Left button down, pos=(683,503)
+64.3716 	DATA 	Mouse:  Left button up, pos=(683,503)
+64.5883 	DATA 	Keypress: escape
+64.6341 	EXP 	slider: status = STOPPED
+64.6474 	EXP 	slider: autoDraw = False
+64.6499 	EXP 	slider: status = STOPPED
+64.6609 	INFO 	saved data to 'C:\\Users\\erang\\Desktop\\Reading_task\\psychopy_experiment\\data/066158_slider_2024-06-19_14h27.13.762.csv'
+64.6615 	INFO 	saved data to C:\Users\erang\Desktop\Reading_task\psychopy_experiment\data/066158_slider_2024-06-19_14h27.13.762.psydat
+64.7068 	EXP 	window1: mouseVisible = True
+64.9301 	DEBUG 	Saving data for slider ExperimentHandler
