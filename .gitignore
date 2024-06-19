@@ -3,3 +3,4 @@
 # */data/*
 *.ov
 *.gdf
+*/__pycache__/*
