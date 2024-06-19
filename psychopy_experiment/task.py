@@ -59,6 +59,11 @@ tone_results_file_name =  os.path.join(current_directory, 'data','tones'\
 qa_results_file_name =  os.path.join(current_directory, 'data','qa'\
                                       , "qa_" + PID + "_" + data.getDateStr())
 
+
+comp_results_file_name =  os.path.join(current_directory, 'data','completion'\
+                                      , "comp_" + PID + "_" + data.getDateStr())
+
+
 df_data = pd.DataFrame(columns=['PID', 'Date','Timestamp', 'BlockNo', \
                                 'BlockType', 'Paragraph_id', 'Reading_time'])
 
@@ -69,6 +74,9 @@ df_tones = pd.DataFrame(columns=['PID', 'Date','Timestamp', 'BlockNo',\
 df_qa = pd.DataFrame(columns=['PID', 'Date','Timestamp', 'BlockNo', \
                               'BlockType', 'Paragraph_id', 'Question_id',\
                                   'KeyPressed', 'CorrectAns', 'Correct'])
+
+df_comp =  pd.DataFrame(columns=['PID', 'Date','Timestamp', 'BlockNo', \
+                              'BlockType', 'Paragraph_id',  'completion'])
 
 
 # monitor setup
@@ -138,6 +146,26 @@ answers_stim =  visual.TextBox(win, size = (1, 1), font_size = 32,
                                    pos= (0.0, - 0.1), \
                                     grid_vert_justification='center'\
                                    , font_color=[1,1,1])
+
+
+
+slider_text = visual.TextStim(win=win, name='text',
+        text='You were able to read " _______" of the passage.',
+        # font='Arial',
+        pos=(0, 0.25),  wrapWidth=1.6,
+        # height=0.05, wrapWidth=None, ori=0.0, 
+        color='white', colorSpace='rgb', opacity=None, 
+        languageStyle='LTR',
+        depth=-1.0);
+
+slider = visual.Slider(win=win, name='slider',
+        startValue=None, size=(1.0, 0.1), pos=(0, 0), units=win.units,
+        labels=['Nothing (0%)',  'All (100%)'], ticks=(0, 100), granularity=0.0,
+        style='slider', styleTweaks=('labels45', 'triangleMarker'), opacity=None,
+        labelColor='LightGray', markerColor='Red', lineColor='White', colorSpace='rgb',
+        font='Open Sans', labelHeight=0.05,
+        flip=False, ori=0.0, depth=0, readOnly=False)
+
 
 
 # host and port of tcp tagging server
@@ -372,6 +400,11 @@ def practiceHelperScreens(win, param):
    '\n\n\n\n Press "SPACE" to continue'
     instructionScreen(win, text, 'space')
 
+def practiceSliderHelperScreens(win, param):
+    text =  'You able to read {} % of the passage'.format(param) +  \
+   '\n\n\n\n Press "SPACE" to continue'
+    instructionScreen(win, text, 'space')
+
 
 
 def block(win, test_type, path, block_type, block_number, paragraph_id):
@@ -572,12 +605,69 @@ def block(win, test_type, path, block_type, block_number, paragraph_id):
             core.wait(0.001) # helps with the keyboard polling issue
         else: 
             continueOuterLoop = False  # abort routine on response
-            continueInnerLoop = False          
-        
+            continueInnerLoop = False
+
+    passageCompletetionScreen(win, test_type, block_type, 
+                    block_number, paragraph_id)
+
 
     return questionsScreen(win, test_type, block_type, 
                     block_number, paragraph_id)
 
+def passageCompletetionScreen(win, test_type, block_type, 
+                    block_number, paragraph_id):
+        
+        global df_comp
+        
+        mouse.mouseClock.reset()
+        prevButtonState = mouse.getPressed()
+        continueLoop = True
+        while (continueLoop):
+            slider_text.draw()
+            slider.draw()
+            endButton.draw()
+            win.flip()
+
+            buttons = mouse.getPressed()
+            if buttons != prevButtonState:  # button state changed?
+                    prevButtonState = buttons
+                    if sum(buttons) > 0:  # state changed to a new click
+                        # check if the mouse was inside our 'clickable' objects
+                        gotValidClick = False
+                        try:
+                            iter(endButton)
+                            clickableList = endButton
+                        except:
+                            clickableList = [endButton]
+                        for obj in clickableList:
+                            if obj.contains(mouse):
+                                gotValidClick = True
+                                mouse.clicked_name.append(obj.name)
+                        x, y = mouse.getPos()
+                        mouse.x.append(x)
+                        mouse.y.append(y)
+                        buttons = mouse.getPressed()
+                        mouse.leftButton.append(buttons[0])
+                        mouse.midButton.append(buttons[1])
+                        mouse.rightButton.append(buttons[2])
+                        mouse.time.append(mouse.mouseClock.getTime())
+                        if gotValidClick and slider.rating:
+                            continueLoop = False 
+                            if (test_type == 'Test'):
+                                new_row = {'PID':PID, 'Date':today, 
+                                            'Timestamp': timeStamp,
+                                            'BlockNo':block_number, 
+                                            'BlockType': block_type,
+                                            'Paragraph_id': paragraph_id,  
+                                            'completion':  slider.getRating() }
+                                # df_tones = pd.concat([df_tones, new_row],\
+                                # ignore_index=True)
+                                df_comp = df_comp.append(new_row,\
+                                                            ignore_index=True)
+                            else:
+                                correctAns = slider.getRating()
+                                practiceSliderHelperScreens(win, correctAns)        
+            core.wait(0.001) # helps with the keyboard polling issue
 
 def questionsScreen(win, test_type, block_type, 
                     block_number, paragraph_id):
@@ -738,7 +828,7 @@ def trainingScreen(win):
     return True  
 
 def save():
-    global df_data, df_tones, df_qa
+    global df_data, df_tones, df_qa, df_comp
 
     if(df_data.shape[0] > 0):
         df_data.to_csv(data_results_filename + ".csv", encoding='utf-8',\
@@ -748,6 +838,10 @@ def save():
                          index=False)
     if df_qa.shape[0] > 0 :
         df_qa.to_csv(qa_results_file_name + ".csv", encoding='utf-8', \
+                     index=False)
+        
+    if df_comp.shape[0]> 0 :
+        df_comp.to_csv(comp_results_file_name + ".csv", encoding='utf-8', \
                      index=False)
 
 def runExperiment(win):
