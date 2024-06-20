@@ -150,9 +150,9 @@ answers_stim =  visual.TextBox(win, size = (1, 1), font_size = 32,
 
 
 slider_text = visual.TextStim(win=win, name='text',
-        text='You were able to read " _______" of the passage.',
+        text='I think, I was able to finish " _______" % of the passage.',
         # font='Arial',
-        pos=(0, 0.25),  wrapWidth=1.6,
+        pos=(0, 0.25),   wrapWidth=1.6,
         # height=0.05, wrapWidth=None, ori=0.0, 
         color='white', colorSpace='rgb', opacity=None, 
         languageStyle='LTR',
@@ -622,6 +622,7 @@ def passageCompletetionScreen(win, test_type, block_type,
         mouse.mouseClock.reset()
         prevButtonState = mouse.getPressed()
         continueLoop = True
+        slider.reset()
         while (continueLoop):
             slider_text.draw()
             slider.draw()
