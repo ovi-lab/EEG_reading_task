@@ -23,7 +23,7 @@ non_data_channels:
   - 11R
 
 notch_freqs: 60
-l_freq: 0.1
+l_freq: 1
 h_freq: 30
 
 
