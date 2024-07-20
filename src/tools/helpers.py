@@ -56,3 +56,61 @@ def getMontage():
 
 # fig1 = neonatal_montage.plot(sphere=(0.00, -0.04, 0.00, 0.1255))   plotting 
     return montage
+
+
+def segmentData():
+
+    stimcodes =  getOVStimCodes()
+    stimGroups = getStimGroups()
+
+    inv_stimCodesMap =  { v: k for k, v in stimcodes.items()}
+    inv_stimGroupsMap = { v: k for k, v in stimGroups.items() }
+
+
+    # specify the participant numbers
+    for pnum in (1, 2, 4):
+        file_path =  "C:\\Users\\erang\\Desktop\\Reading_task\\ov_experiment\\scenarios\\data\\Pilot\\record_p{}.gdf".format(pnum)
+        raw  = mne.io.read_raw_gdf(file_path)
+
+        events_from_annot, event_dict =  mne.events_from_annotations(raw)
+
+        # if check to make sure only get the relevant keys 
+        modified_event_dict =  { inv_stimGroupsMap[inv_stimCodesMap[int(k)]] :
+                                v for k,v in event_dict.items() 
+                                if inv_stimCodesMap[int(k)] in inv_stimGroupsMap}
+
+        timings ={}
+
+        timings['timing/distractive/start'] = [event[0] / raw.info['sfreq'] for \
+                                    event in events_from_annot if event[2] ==  \
+                                modified_event_dict['timing/distractive/start']]
+        timings['timing/distractive/stop'] = [event[0] / raw.info['sfreq'] for \
+                                event in events_from_annot if event[2] == \
+                                modified_event_dict['timing/distractive/stop']]
+        timings['timing/attentive/start'] = [event[0] / raw.info['sfreq'] for \
+                                event in events_from_annot if event[2] == \
+                                modified_event_dict['timing/attentive/start']]
+        timings['timing/attentive/stop'] = [event[0] / raw.info['sfreq'] for \
+                                event in events_from_annot if event[2] == \
+                                modified_event_dict['timing/attentive/stop']]
+        
+        num_passages_per_condition = len(timings['timing/distractive/start'])
+        
+        for i in range(0, num_passages_per_condition):
+            raw_segment = raw.copy().crop(tmin=timings['timing/distractive/start'] [i] ,
+                                    tmax=timings['timing/distractive/stop'] [i])
+        
+            path =  "C:\\Users\\erang\\Desktop\\Reading_task\\ov_experiment\\scenarios\\data\\Pilot\\P{}\\D{}.fif".format(pnum, i)
+
+
+            raw_segment.save(fname = path, overwrite=True)
+
+
+            raw_segment = raw.copy().crop(tmin=timings['timing/attentive/start'] [i] ,
+                                    tmax=timings['timing/attentive/stop'] [i])
+        
+            path =  "C:\\Users\\erang\\Desktop\\Reading_task\\ov_experiment\\scenarios\\data\\Pilot\\P{}\\ND{}.fif".format(pnum, i)
+
+
+            raw_segment.save(fname = path, overwrite=True)
+

@@ -3,3 +3,5 @@
 # */data/*
 *.ov
 .DS_Store
+*.gdf
+*/__pycache__/*

@@ -1,6 +1,11 @@
+Pilot
+
 P1: Harishit : ESL   - with answer 4 options
 P2: Reece  - Native with answer 4 options
 P3: Deena : ESL
 P4: Rishav : Native
-P5: Jaisee
-P6: Julia
+P5: Jaisee: 
+P6: Julia : NO EEG data
+P7: Rishav : NO EEG data
+P8: Reece : NO EEG data
+P9: Marium : NO EEG data
