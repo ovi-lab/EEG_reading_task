@@ -21,9 +21,9 @@ def loadData(partipantId):
 def loadSegmentedData(partipantId, block_number):
 
     participant_number = 'P' + str(partipantId)
-    partipant_data_path =  'Pilot'+ '/'+ participant_number + '/' + block_number +'.fif'
+    partipant_data_path =  'Pilot'+ '/'+ participant_number + '/' + block_number +'-raw.fif'
     path = os.path.join(configss['root'], configss['data_dir'] , partipant_data_path ) 
-    raw  = mne.io.read_raw_fif(path)
+    raw  = mne.io.read_raw_fif(path, preload =True)
     return raw
 
 
@@ -287,7 +287,7 @@ def segmentData(p_num_list, preprocess = True):
             
             block_number = 'D' + str(i)
             participant_number = 'P' + str(pnum)
-            partipant_data_path =  'Pilot'+ '/'+ participant_number + '/' + block_number +'.fif'
+            partipant_data_path =  'Pilot'+ '/'+ participant_number + '/' + block_number +'-raw.fif'
             path = os.path.join(configss['root'], configss['data_dir'] , partipant_data_path ) 
         
             raw_segment.save(fname = path, overwrite=True)
@@ -298,7 +298,7 @@ def segmentData(p_num_list, preprocess = True):
         
             block_number = 'ND' + str(i)
             participant_number = 'P' + str(pnum)
-            partipant_data_path =  'Pilot'+ '/'+ participant_number + '/' + block_number +'.fif'
+            partipant_data_path =  'Pilot'+ '/'+ participant_number + '/' + block_number +'-raw.fif'
             path = os.path.join(configss['root'], configss['data_dir'] , partipant_data_path ) 
 
 
