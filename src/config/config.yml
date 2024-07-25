@@ -24,14 +24,14 @@ non_data_channels:
 
 notch_freqs: 60
 l_freq: 4
-h_freq: 30
+h_freq: 14
 
 
-epoch_tmin: -0.2
+epoch_tmin: -0.6
 epoch_tmax: 0.6
 
-baseline_correction_l: -0.2
-baseline_correction_h: 0
+baseline_correction_l: -0.6
+baseline_correction_h: -0.1
 
 
 central_perital: 
