@@ -292,6 +292,7 @@ def segmentData(p_num_list, preprocess = True):
         path = os.path.join(configss['root'], configss['data_dir'] , partipant_data_path ) 
 
         raw  = mne.io.read_raw_gdf(path)
+        raw.apply_function(lambda x: x * 1e6)
 
         if(preprocess):
             raw = preprocessing(raw)
