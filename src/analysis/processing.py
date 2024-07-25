@@ -115,8 +115,8 @@ def eventEpochdata(raw):
     tmin = configss['epoch_tmin'] if configss['epoch_tmin'] is not None else None 
     tmax = configss['epoch_tmax'] if configss['epoch_tmax'] is not None else None
 
-    # reject high amplitude signals, could be artifacts
-    reject_criteria = dict(eeg=100e-6)  # 100 µV
+    # # reject high amplitude signals, could be artifacts
+    # reject_criteria = dict(eeg=100e-6)  # 100 µV
 
     # baseline correction
     baseline_correction_l = configss['baseline_correction_l'] \
@@ -127,12 +127,14 @@ def eventEpochdata(raw):
 
     epochs = mne.Epochs(raw, events_from_annot, 
                         event_id=epoch_event_dict, tmin=tmin, tmax=tmax,
-                          preload=True, reject=reject_criteria, 
+                          preload=True, 
                         baseline=(
                             baseline_correction_l,
                               baseline_correction_h))
+    
+    clean_epochs =  removeArtifacts(raw, epochs)
 
-    return epochs, epoch_event_dict
+    return clean_epochs, epoch_event_dict
 
 
 def eventEpocshByBlocks(raw):
