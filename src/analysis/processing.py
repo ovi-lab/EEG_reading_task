@@ -23,7 +23,7 @@ def loadData(partipantId):
 def loadSegmentedData(partipantId, block_number):
 
     participant_number = 'P' + str(partipantId)
-    partipant_data_path =  'Pilot'+ '/'+ participant_number + '/' + block_number +'-raw.fif'
+    partipant_data_path =  'Pilot'+ '/'+ participant_number + '/' + block_number +'-erp-raw.fif'
     path = os.path.join(configss['root'], configss['data_dir'] , partipant_data_path ) 
     raw  = mne.io.read_raw_fif(path, preload =True)
     return raw
@@ -91,6 +91,18 @@ def removeArtifacts(raw, epochs):
     auto_reject_post_ica = autoreject.AutoReject(random_state = 100, n_interpolate=[1, 2, 3, 4]).fit(epochs_clean[:20])
     epochs_clean         = auto_reject_post_ica.transform(epochs_clean)
 
+        # baseline correction
+    baseline_correction_l = configss['baseline_correction_l'] \
+        if configss['baseline_correction_l'] is not None else None 
+    
+    baseline_correction_h = configss['baseline_correction_h'] \
+        if configss['baseline_correction_h'] is not None else None
+
+    epochs_clean =  epochs_clean.apply_baseline( 
+        baseline=(baseline_correction_l,
+                              baseline_correction_h))
+
+
     return  epochs_clean  
 
 
@@ -118,19 +130,12 @@ def eventEpochdata(raw):
     # # reject high amplitude signals, could be artifacts
     # reject_criteria = dict(eeg=100e-6)  # 100 µV
 
-    # baseline correction
-    baseline_correction_l = configss['baseline_correction_l'] \
-        if configss['baseline_correction_l'] is not None else None 
-    
-    baseline_correction_h = configss['baseline_correction_h'] \
-        if configss['baseline_correction_h'] is not None else None
-
     epochs = mne.Epochs(raw, events_from_annot, 
                         event_id=epoch_event_dict, tmin=tmin, tmax=tmax,
                           preload=True, 
                         baseline=(
-                            baseline_correction_l,
-                              baseline_correction_h))
+                            None,
+                              None))
     
     clean_epochs =  removeArtifacts(raw, epochs)
 
@@ -293,8 +298,8 @@ def segmentData(p_num_list, preprocess = True):
         partipant_data_path =  'Pilot'+ '/' + participant_name +'.gdf'
         path = os.path.join(configss['root'], configss['data_dir'] , partipant_data_path ) 
 
-        raw  = mne.io.read_raw_gdf(path)
-        raw.apply_function(lambda x: x * 1e6)
+        raw  = mne.io.read_raw_gdf(path, preload=True )
+        # raw.apply_function(lambda x: x * 1e6)
 
         if(preprocess):
             raw = preprocessing(raw)
@@ -329,7 +334,7 @@ def segmentData(p_num_list, preprocess = True):
             
             block_number = 'D' + str(i)
             participant_number = 'P' + str(pnum)
-            partipant_data_path =  'Pilot'+ '/'+ participant_number + '/' + block_number +'-raw.fif'
+            partipant_data_path =  'Pilot'+ '/'+ participant_number + '/' + block_number +'-erp-raw.fif'
             path = os.path.join(configss['root'], configss['data_dir'] , partipant_data_path ) 
         
             raw_segment.save(fname = path, overwrite=True)
@@ -340,7 +345,7 @@ def segmentData(p_num_list, preprocess = True):
         
             block_number = 'ND' + str(i)
             participant_number = 'P' + str(pnum)
-            partipant_data_path =  'Pilot'+ '/'+ participant_number + '/' + block_number +'-raw.fif'
+            partipant_data_path =  'Pilot'+ '/'+ participant_number + '/' + block_number +'-erp-raw.fif'
             path = os.path.join(configss['root'], configss['data_dir'] , partipant_data_path ) 
 
 
