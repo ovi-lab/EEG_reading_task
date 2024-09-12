@@ -270,7 +270,7 @@ def applyICA(raw):
 
 def epochContinuousData(raw):
     # reject high amplitude signals, could be artifacts
-    epochs =  mne.make_fixed_length_epochs(raw, duration=1, overlap = 0.1, \
+    epochs =  mne.make_fixed_length_epochs(raw, duration=1, \
                                         preload=True)
     
     return removeArtifacts(raw, epochs)
