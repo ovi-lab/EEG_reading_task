@@ -17,15 +17,6 @@ def loadData(partipantId):
     partipant_data_path =  participant_name + '/' + participant_name +'.gdf'
     path = os.path.join(configss['root'], configss['data_dir'] , partipant_data_path ) 
     raw  = mne.io.read_raw_gdf(path)
-    raw.apply_function(lambda x: x * 1e6)
-    return raw
-
-def loadSegmentedData(partipantId, block_number):
-
-    participant_number = 'P' + str(partipantId)
-    partipant_data_path =  participant_number + '/' + block_number +'-raw.fif'
-    path = os.path.join(configss['root'], configss['data_dir'] , partipant_data_path ) 
-    raw  = mne.io.read_raw_fif(path, preload =True)
     return raw
 
 
@@ -268,85 +259,5 @@ def applyICA(raw):
     return raw
 
 
-def epochContinuousData(raw):
-    # reject high amplitude signals, could be artifacts
-    epochs =  mne.make_fixed_length_epochs(raw, duration=1, overlap = 0.1, \
-                                        preload=True)
-    
-    return removeArtifacts(raw, epochs)
-
-def segmentData(p_num_list, preprocess = True):
-
-    stimcodes =  tools.helpers.getOVStimCodes()
-    stimGroups = tools.helpers.getStimGroups()
-
-    inv_stimCodesMap =  { v: k for k, v in stimcodes.items()}
-    inv_stimGroupsMap = { v: k for k, v in stimGroups.items() }
-
-
-    # specify the participant numbers
-    for pnum in (p_num_list):
-        
-        participant_name = 'P' + str(pnum)
-        # partipant_data_path =  'Pilot'+ '/' + participant_name +'.gdf'
-        partipant_data_path =  participant_name +'.gdf'
-        path = os.path.join(configss['root'], configss['data_dir'] , partipant_data_path ) 
-
-        raw  = mne.io.read_raw_gdf(path, preload = True)
-        raw.apply_function(lambda x: x * 1e6)
-
-        if(preprocess):
-            raw = preprocessing(raw)
-
-        events_from_annot, event_dict =  mne.events_from_annotations(raw)
-
-        # if check to make sure only get the relevant keys 
-        modified_event_dict =  { inv_stimGroupsMap[inv_stimCodesMap[int(k)]] :
-                                v for k,v in event_dict.items() 
-                                if inv_stimCodesMap[int(k)] in inv_stimGroupsMap}
-
-        timings ={}
-
-        timings['timing/distractive/start'] = [event[0] / raw.info['sfreq'] for \
-                                    event in events_from_annot if event[2] ==  \
-                                modified_event_dict['timing/distractive/start']]
-        timings['timing/distractive/stop'] = [event[0] / raw.info['sfreq'] for \
-                                event in events_from_annot if event[2] == \
-                                modified_event_dict['timing/distractive/stop']]
-        timings['timing/attentive/start'] = [event[0] / raw.info['sfreq'] for \
-                                event in events_from_annot if event[2] == \
-                                modified_event_dict['timing/attentive/start']]
-        timings['timing/attentive/stop'] = [event[0] / raw.info['sfreq'] for \
-                                event in events_from_annot if event[2] == \
-                                modified_event_dict['timing/attentive/stop']]
-        
-        num_passages_per_condition = len(timings['timing/distractive/start'])
-
-        participant_number = 'P' + str(pnum)
-        directory = os.path.join(configss['root'], configss['data_dir'] , participant_number ) 
-        if not os.path.exists(directory):
-            os.makedirs(directory)
-        
-        for i in range(0, num_passages_per_condition):
-            raw_segment = raw.copy().crop(tmin=timings['timing/distractive/start'] [i] ,
-                                    tmax=timings['timing/distractive/stop'] [i])
-            
-            block_number = 'D' + str(i)
-            partipant_data_path =  participant_number + '/' + block_number +'-raw.fif'
-            path = os.path.join(configss['root'], configss['data_dir'] , partipant_data_path ) 
-        
-            raw_segment.save(fname = path, overwrite=True)
-
-
-            raw_segment = raw.copy().crop(tmin=timings['timing/attentive/start'] [i] ,
-                                    tmax=timings['timing/attentive/stop'] [i])
-        
-            block_number = 'ND' + str(i)
-            participant_number = 'P' + str(pnum)
-            partipant_data_path =  participant_number + '/' + block_number +'-raw.fif'
-            path = os.path.join(configss['root'], configss['data_dir'] , partipant_data_path ) 
-
-
-            raw_segment.save(fname = path, overwrite=True)
 
 
