@@ -3,7 +3,8 @@ import pandas as pd
 import tools.helpers
 import os
 import matplotlib.pyplot as plt
-from mne.preprocessing import ICA 
+from mne.preprocessing import ICA
+import autoreject 
 
 from config import Config
 configObj = Config()
@@ -16,7 +17,17 @@ def loadData(partipantId):
     partipant_data_path =  participant_name + '/' + participant_name +'.gdf'
     path = os.path.join(configss['root'], configss['data_dir'] , partipant_data_path ) 
     raw  = mne.io.read_raw_gdf(path)
+    raw.apply_function(lambda x: x * 1e6)
     return raw
+
+def loadSegmentedData(partipantId, block_number):
+
+    participant_number = 'P' + str(partipantId)
+    partipant_data_path =  participant_number + '/' + block_number +'-raw.fif'
+    path = os.path.join(configss['root'], configss['data_dir'] , partipant_data_path ) 
+    raw  = mne.io.read_raw_fif(path, preload =True)
+    return raw
+
 
 def preprocessing(raw):
 
@@ -45,9 +56,42 @@ def preprocessing(raw):
 
     raw_filtered.set_montage(montage)
 
-    raw_artifact_corrected = applyICA(raw_filtered)
+    # raw_artifact_corrected = applyICA(raw_filtered)
 
-    return  raw_artifact_corrected
+    return  raw_filtered
+
+
+def removeArtifacts(raw, epochs):
+
+    # Autoreject (local) epochs to benefit ICA (fit on 20 epochs to save time)
+    auto_reject_pre_ica   = autoreject.AutoReject( n_interpolate=[1, 2, 3, 4], random_state = 100).fit(epochs[:20])
+    epochs_ar, reject_log = auto_reject_pre_ica.transform(epochs, return_log = True)
+
+    ica = ICA(max_iter="auto", random_state=97)
+    ica.fit(epochs[~reject_log.bad_epochs])
+
+    ica.exclude = []
+    num_excl = 0
+    max_ic = 2
+    z_thresh = 3.5
+    z_step = .05
+
+    while num_excl < max_ic:
+        eog_indices, eog_scores = ica.find_bads_eog(raw,
+                                                ch_name=['1L', '1R', '2LC', '2RC'], 
+                                                threshold=z_thresh
+                                                )
+        num_excl = len(eog_indices)
+        z_thresh -= z_step # won't impact things if num_excl is ≥ n_max_eog 
+
+# assign the bad EOG components to the ICA.exclude attribute so they can be removed later
+    ica.exclude = eog_indices
+    epochs_clean  = ica.apply(epochs.copy())
+
+    auto_reject_post_ica = autoreject.AutoReject(random_state = 100, n_interpolate=[1, 2, 3, 4]).fit(epochs_clean[:20])
+    epochs_clean         = auto_reject_post_ica.transform(epochs_clean)
+
+    return  epochs_clean  
 
 
 def eventEpochdata(raw):
@@ -147,7 +191,7 @@ def eventEpocshByBlocks(raw):
 
 
     # reject high amplitude signals, could be artifacts
-    reject_criteria = dict(eeg=100e-6)  # 100 µV
+    reject_criteria = dict(eeg=100e-12)  # 100 µV
 
 
     # baseline correction
@@ -200,7 +244,7 @@ def getERPMontage(evokeds):
 
 
 def applyICA(raw):
-    ica = ICA(n_components=15, max_iter="auto", random_state=97)
+    ica = ICA(max_iter="auto", random_state=97)
     ica.fit(raw)
 
     ica.exclude = []
@@ -224,5 +268,85 @@ def applyICA(raw):
     return raw
 
 
+def epochContinuousData(raw):
+    # reject high amplitude signals, could be artifacts
+    epochs =  mne.make_fixed_length_epochs(raw, duration=1, overlap = 0.1, \
+                                        preload=True)
+    
+    return removeArtifacts(raw, epochs)
+
+def segmentData(p_num_list, preprocess = True):
+
+    stimcodes =  tools.helpers.getOVStimCodes()
+    stimGroups = tools.helpers.getStimGroups()
+
+    inv_stimCodesMap =  { v: k for k, v in stimcodes.items()}
+    inv_stimGroupsMap = { v: k for k, v in stimGroups.items() }
+
+
+    # specify the participant numbers
+    for pnum in (p_num_list):
+        
+        participant_name = 'P' + str(pnum)
+        # partipant_data_path =  'Pilot'+ '/' + participant_name +'.gdf'
+        partipant_data_path =  participant_name +'.gdf'
+        path = os.path.join(configss['root'], configss['data_dir'] , partipant_data_path ) 
+
+        raw  = mne.io.read_raw_gdf(path, preload = True)
+        raw.apply_function(lambda x: x * 1e6)
+
+        if(preprocess):
+            raw = preprocessing(raw)
+
+        events_from_annot, event_dict =  mne.events_from_annotations(raw)
+
+        # if check to make sure only get the relevant keys 
+        modified_event_dict =  { inv_stimGroupsMap[inv_stimCodesMap[int(k)]] :
+                                v for k,v in event_dict.items() 
+                                if inv_stimCodesMap[int(k)] in inv_stimGroupsMap}
+
+        timings ={}
+
+        timings['timing/distractive/start'] = [event[0] / raw.info['sfreq'] for \
+                                    event in events_from_annot if event[2] ==  \
+                                modified_event_dict['timing/distractive/start']]
+        timings['timing/distractive/stop'] = [event[0] / raw.info['sfreq'] for \
+                                event in events_from_annot if event[2] == \
+                                modified_event_dict['timing/distractive/stop']]
+        timings['timing/attentive/start'] = [event[0] / raw.info['sfreq'] for \
+                                event in events_from_annot if event[2] == \
+                                modified_event_dict['timing/attentive/start']]
+        timings['timing/attentive/stop'] = [event[0] / raw.info['sfreq'] for \
+                                event in events_from_annot if event[2] == \
+                                modified_event_dict['timing/attentive/stop']]
+        
+        num_passages_per_condition = len(timings['timing/distractive/start'])
+
+        participant_number = 'P' + str(pnum)
+        directory = os.path.join(configss['root'], configss['data_dir'] , participant_number ) 
+        if not os.path.exists(directory):
+            os.makedirs(directory)
+        
+        for i in range(0, num_passages_per_condition):
+            raw_segment = raw.copy().crop(tmin=timings['timing/distractive/start'] [i] ,
+                                    tmax=timings['timing/distractive/stop'] [i])
+            
+            block_number = 'D' + str(i)
+            partipant_data_path =  participant_number + '/' + block_number +'-raw.fif'
+            path = os.path.join(configss['root'], configss['data_dir'] , partipant_data_path ) 
+        
+            raw_segment.save(fname = path, overwrite=True)
+
+
+            raw_segment = raw.copy().crop(tmin=timings['timing/attentive/start'] [i] ,
+                                    tmax=timings['timing/attentive/stop'] [i])
+        
+            block_number = 'ND' + str(i)
+            participant_number = 'P' + str(pnum)
+            partipant_data_path =  participant_number + '/' + block_number +'-raw.fif'
+            path = os.path.join(configss['root'], configss['data_dir'] , partipant_data_path ) 
+
+
+            raw_segment.save(fname = path, overwrite=True)
 
 
