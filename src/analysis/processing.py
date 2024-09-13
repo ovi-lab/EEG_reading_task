@@ -10,6 +10,15 @@ from config import Config
 configObj = Config()
 configss = configObj.getConfigSnapshot()
 
+# Step 1: Check if the file exists
+if os.path.exists("df_epoch_log.csv"):
+    # If the file exists, read the DataFrame from the CSV file
+    df_epoch_log = pd.read_csv("df_epoch_log.csv")
+else:
+    # If the file doesn't exist, create an empty DataFrame with the necessary columns
+    df_epoch_log = pd.DataFrame(columns=['PID', 'block_num', \
+                                'before_cleaning', 'After_cleaning'])
+
 
 # todo: add validations to check the path, file type, partipantId check
 def loadData(partipantId):
@@ -268,12 +277,38 @@ def applyICA(raw):
     return raw
 
 
-def epochContinuousData(raw):
+def epochContinuousData(pid, block_num, raw):
+
+    global df_epoch_log
+
     # reject high amplitude signals, could be artifacts
     epochs =  mne.make_fixed_length_epochs(raw, duration=1, \
                                         preload=True)
     
-    return removeArtifacts(raw, epochs)
+    before_cleaning  = len(epochs)
+    cleaned_epochs =  removeArtifacts(raw, epochs)
+    after_cleaning =   len(cleaned_epochs)
+
+    # New data (row) that needs to be added or updated
+    new_row = {'PID': pid, 'block_num': block_num, \
+                'before_cleaning': before_cleaning, \
+               'After_cleaning':after_cleaning}
+
+    # Step 2: Check if both 'ID' and 'Name' already exist in the DataFrame
+    matching_rows = df_epoch_log[(df_epoch_log['PID'] == new_row['PID']) & (df_epoch_log['block_num'] == new_row['block_num'])]
+
+    if not matching_rows.empty:
+    # Step 3a: Overwrite the row if both 'ID' and 'Name' match
+        df_epoch_log.loc[(df_epoch_log['PID'] == new_row['PID']) & (df_epoch_log['block_num'] == new_row['block_num']), ['before_cleaning']] = before_cleaning
+        df_epoch_log.loc[(df_epoch_log['PID'] == new_row['PID']) & (df_epoch_log['block_num'] == new_row['block_num']), ['after_cleaning']] = after_cleaning
+    else:
+    # Step 3b: Append the new row if 'ID' and 'Name' don't match
+        df_epoch_log = pd.concat([df_epoch_log, pd.DataFrame([new_row])], ignore_index=True)  
+
+    # Save the DataFrame (for example, CSV)
+    df_epoch_log.to_csv('df_epoch_log.csv', index=False)
+
+    return cleaned_epochs
 
 def segmentData(p_num_list, preprocess = True):
 
