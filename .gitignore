@@ -2,6 +2,9 @@
 # data/*
 # */data/*
 *.ov
-.DS_Store
+*.DS_Store
 *.gdf
+*.fif
 */__pycache__/*
+*.pyc
+*.zip
