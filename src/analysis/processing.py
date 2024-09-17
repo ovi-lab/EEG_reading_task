@@ -23,7 +23,7 @@ def loadData(partipantId):
 def loadSegmentedData(partipantId, block_number):
 
     participant_number = 'P' + str(partipantId)
-    partipant_data_path =  'Pilot'+ '/'+ participant_number + '/' + block_number +'-erp-raw.fif'
+    partipant_data_path =  participant_number + '/' + block_number +'-raw.fif'
     path = os.path.join(configss['root'], configss['data_dir'] , partipant_data_path ) 
     raw  = mne.io.read_raw_fif(path, preload =True)
     return raw
