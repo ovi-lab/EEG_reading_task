@@ -134,8 +134,8 @@ def eventEpochdata(raw):
                         event_id=epoch_event_dict, tmin=tmin, tmax=tmax,
                           preload=True, 
                         baseline=(
-                            None,
-                              None))
+                            -0.3,
+                              -0.1))
     
     clean_epochs =  removeArtifacts(raw, epochs)
 
