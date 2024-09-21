@@ -5,6 +5,12 @@
 data_dir: ov_experiment/scenarios/data
 # data_format: gdf  should be gdf file by default
 
+data_qa: psychopy_experiment/data/qa
+data_tones: psychopy_experiment/data/tones
+data_completion: psychopy_experiment/data/completion
+data_reading_data: psychopy_experiment/data/reading_data
+
+
 #tools
 ov_stim_list_path: src/tools/stimulation_list.txt
 oddball_stim_path: src/tools/oddball_stimulation_groups.yaml

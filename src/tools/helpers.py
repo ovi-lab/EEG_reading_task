@@ -114,3 +114,31 @@ def segmentData():
 
             raw_segment.save(fname = path, overwrite=True)
 
+
+
+def getPIDtoCondDict():
+
+    conditions_data_path =  'psychopy_experiment\conditions\conditions.xlsx'
+    path = os.path.join(configss['root'], conditions_data_path ) 
+    print(path)
+
+    df = pd.read_excel(path)
+    # Function to limit to the first two occurrences of 'D' and 'ND'
+
+    sorted_df = df.sort_values(by='Index').reset_index(drop=True)
+
+    def limit_blocks(blocks):
+        d_count = 0
+        nd_count = 0
+        limited_blocks = []
+        for index, value in enumerate(blocks):
+            if value == 'D' and d_count < 2:
+                limited_blocks.append(f'{value}{d_count}')
+                d_count += 1
+            elif value == 'ND' and nd_count < 2:
+                limited_blocks.append(f'{value}{nd_count}')
+                nd_count += 1
+        return limited_blocks
+
+    # Create the dictionary with limited 'D' and 'ND' values
+    return {pid: limit_blocks(list(sorted_df[sorted_df["PID"] == pid]['Block_type'])) for pid in sorted_df["PID"].unique() if pid > 0 }

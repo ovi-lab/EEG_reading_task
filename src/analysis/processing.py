@@ -3,11 +3,21 @@ import pandas as pd
 import tools.helpers
 import os
 import matplotlib.pyplot as plt
-from mne.preprocessing import ICA 
+from mne.preprocessing import ICA
+import autoreject 
 
 from config import Config
 configObj = Config()
 configss = configObj.getConfigSnapshot()
+
+# Step 1: Check if the file exists
+if os.path.exists("df_epoch_log.csv"):
+    # If the file exists, read the DataFrame from the CSV file
+    df_epoch_log = pd.read_csv("df_epoch_log.csv")
+else:
+    # If the file doesn't exist, create an empty DataFrame with the necessary columns
+    df_epoch_log = pd.DataFrame(columns=['PID', 'block_num', \
+                                'before_cleaning', 'After_cleaning'])
 
 
 # todo: add validations to check the path, file type, partipantId check
@@ -16,12 +26,13 @@ def loadData(partipantId):
     partipant_data_path =  participant_name + '/' + participant_name +'.gdf'
     path = os.path.join(configss['root'], configss['data_dir'] , partipant_data_path ) 
     raw  = mne.io.read_raw_gdf(path)
+    raw.apply_function(lambda x: x * 1e6)
     return raw
 
 def loadSegmentedData(partipantId, block_number):
 
     participant_number = 'P' + str(partipantId)
-    partipant_data_path =  'Pilot'+ '/'+ participant_number + '/' + block_number +'-raw.fif'
+    partipant_data_path =  participant_number + '/' + block_number +'-raw.fif'
     path = os.path.join(configss['root'], configss['data_dir'] , partipant_data_path ) 
     raw  = mne.io.read_raw_fif(path, preload =True)
     return raw
@@ -54,9 +65,42 @@ def preprocessing(raw):
 
     raw_filtered.set_montage(montage)
 
-    raw_artifact_corrected = applyICA(raw_filtered)
+    # raw_artifact_corrected = applyICA(raw_filtered)
 
-    return  raw_artifact_corrected
+    return  raw_filtered
+
+
+def removeArtifacts(raw, epochs):
+
+    # Autoreject (local) epochs to benefit ICA (fit on 20 epochs to save time)
+    auto_reject_pre_ica   = autoreject.AutoReject( n_interpolate=[1, 2, 3, 4], random_state = 100).fit(epochs[:20])
+    epochs_ar, reject_log = auto_reject_pre_ica.transform(epochs, return_log = True)
+
+    ica = ICA(max_iter="auto", random_state=97)
+    ica.fit(epochs[~reject_log.bad_epochs])
+
+    ica.exclude = []
+    num_excl = 0
+    max_ic = 2
+    z_thresh = 3.5
+    z_step = .05
+
+    while num_excl < max_ic:
+        eog_indices, eog_scores = ica.find_bads_eog(raw,
+                                                ch_name=['1L', '1R', '2LC', '2RC'], 
+                                                threshold=z_thresh
+                                                )
+        num_excl = len(eog_indices)
+        z_thresh -= z_step # won't impact things if num_excl is ≥ n_max_eog 
+
+# assign the bad EOG components to the ICA.exclude attribute so they can be removed later
+    ica.exclude = eog_indices
+    epochs_clean  = ica.apply(epochs.copy())
+
+    auto_reject_post_ica = autoreject.AutoReject(random_state = 100, n_interpolate=[1, 2, 3, 4]).fit(epochs_clean[:20])
+    epochs_clean         = auto_reject_post_ica.transform(epochs_clean)
+
+    return  epochs_clean  
 
 
 def eventEpochdata(raw):
@@ -156,7 +200,7 @@ def eventEpocshByBlocks(raw):
 
 
     # reject high amplitude signals, could be artifacts
-    reject_criteria = dict(eeg=100e-6)  # 100 µV
+    reject_criteria = dict(eeg=100e-12)  # 100 µV
 
 
     # baseline correction
@@ -209,7 +253,7 @@ def getERPMontage(evokeds):
 
 
 def applyICA(raw):
-    ica = ICA(n_components=15, max_iter="auto", random_state=97)
+    ica = ICA(max_iter="auto", random_state=97)
     ica.fit(raw)
 
     ica.exclude = []
@@ -233,8 +277,38 @@ def applyICA(raw):
     return raw
 
 
-def epochContinuousData(raw):
-    return mne.make_fixed_length_epochs(raw, duration=1, overlap = 0.1, preload=False)
+def epochContinuousData(pid, block_num, raw):
+
+    global df_epoch_log
+
+    # reject high amplitude signals, could be artifacts
+    epochs =  mne.make_fixed_length_epochs(raw, duration=1, \
+                                        preload=True)
+    
+    before_cleaning  = len(epochs)
+    cleaned_epochs =  removeArtifacts(raw, epochs)
+    after_cleaning =   len(cleaned_epochs)
+
+    # New data (row) that needs to be added or updated
+    new_row = {'PID': pid, 'block_num': block_num, \
+                'before_cleaning': before_cleaning, \
+               'After_cleaning':after_cleaning}
+
+    # Step 2: Check if both 'ID' and 'Name' already exist in the DataFrame
+    matching_rows = df_epoch_log[(df_epoch_log['PID'] == new_row['PID']) & (df_epoch_log['block_num'] == new_row['block_num'])]
+
+    if not matching_rows.empty:
+    # Step 3a: Overwrite the row if both 'ID' and 'Name' match
+        df_epoch_log.loc[(df_epoch_log['PID'] == new_row['PID']) & (df_epoch_log['block_num'] == new_row['block_num']), ['before_cleaning']] = before_cleaning
+        df_epoch_log.loc[(df_epoch_log['PID'] == new_row['PID']) & (df_epoch_log['block_num'] == new_row['block_num']), ['after_cleaning']] = after_cleaning
+    else:
+    # Step 3b: Append the new row if 'ID' and 'Name' don't match
+        df_epoch_log = pd.concat([df_epoch_log, pd.DataFrame([new_row])], ignore_index=True)  
+
+    # Save the DataFrame (for example, CSV)
+    df_epoch_log.to_csv('df_epoch_log.csv', index=False)
+
+    return cleaned_epochs
 
 def segmentData(p_num_list, preprocess = True):
 
@@ -248,11 +322,13 @@ def segmentData(p_num_list, preprocess = True):
     # specify the participant numbers
     for pnum in (p_num_list):
         
-        participant_name = 'record_p' + str(pnum)
-        partipant_data_path =  'Pilot'+ '/' + participant_name +'.gdf'
+        participant_name = 'P' + str(pnum)
+        # partipant_data_path =  'Pilot'+ '/' + participant_name +'.gdf'
+        partipant_data_path =  participant_name +'.gdf'
         path = os.path.join(configss['root'], configss['data_dir'] , partipant_data_path ) 
 
-        raw  = mne.io.read_raw_gdf(path)
+        raw  = mne.io.read_raw_gdf(path, preload = True)
+        raw.apply_function(lambda x: x * 1e6)
 
         if(preprocess):
             raw = preprocessing(raw)
@@ -280,14 +356,18 @@ def segmentData(p_num_list, preprocess = True):
                                 modified_event_dict['timing/attentive/stop']]
         
         num_passages_per_condition = len(timings['timing/distractive/start'])
+
+        participant_number = 'P' + str(pnum)
+        directory = os.path.join(configss['root'], configss['data_dir'] , participant_number ) 
+        if not os.path.exists(directory):
+            os.makedirs(directory)
         
         for i in range(0, num_passages_per_condition):
             raw_segment = raw.copy().crop(tmin=timings['timing/distractive/start'] [i] ,
                                     tmax=timings['timing/distractive/stop'] [i])
             
             block_number = 'D' + str(i)
-            participant_number = 'P' + str(pnum)
-            partipant_data_path =  'Pilot'+ '/'+ participant_number + '/' + block_number +'-raw.fif'
+            partipant_data_path =  participant_number + '/' + block_number +'-raw.fif'
             path = os.path.join(configss['root'], configss['data_dir'] , partipant_data_path ) 
         
             raw_segment.save(fname = path, overwrite=True)
@@ -298,7 +378,7 @@ def segmentData(p_num_list, preprocess = True):
         
             block_number = 'ND' + str(i)
             participant_number = 'P' + str(pnum)
-            partipant_data_path =  'Pilot'+ '/'+ participant_number + '/' + block_number +'-raw.fif'
+            partipant_data_path =  participant_number + '/' + block_number +'-raw.fif'
             path = os.path.join(configss['root'], configss['data_dir'] , partipant_data_path ) 
 
 
