@@ -583,3 +583,14 @@ plt.ylabel('Mean Score')
 plt.legend(title='Condition')
 plt.tight_layout()
 plt.show()
+
+
+
+mean_std_summary = stat_data.groupby(['measure', 'type']).agg(
+    Mean=('score', 'mean'),
+    Std=('score', 'std')
+).reset_index()
+
+# Display the summary table
+print("=== Mean and Standard Deviation for Each Measure and Condition ===")
+print(mean_std_summary.to_string(index=False))
