@@ -301,6 +301,9 @@ import warnings
 import pingouin as pg
 import os
 
+plt.rcParams['figure.figsize'] = [12, 8]
+plt.rcParams['figure.dpi'] = 200 # 200 
+
 # Suppress warnings for clean output
 warnings.filterwarnings('ignore')
 
