@@ -515,29 +515,31 @@ print(test_results_df[['Measure', 'Test', 'Test Statistic', 'p-value', 'p_adj', 
 # Step 8: Visualization with Significance Annotations
 # ===========================
 
-# Set up the plot
-plt.figure(figsize=(12, 8))
-sns.set(style="whitegrid")
+# # Set up the plot
+# plt.figure(figsize=(12, 8))
+# # sns.set(style="whitegrid")
 
-# Create the barplot
-ax = sns.barplot(
-    x='measure',
-    y='score',
-    hue='type',
-    data=stat_data,
-    ci=95  # 95% confidence intervals
-)
+# # Create the barplot
+# ax = sns.boxplot(
+#     x='measure',
+#     y='score',
+#     hue='type',
+#     data=stat_data,
+#     # ci=95,  # 95% confidence intervals
+#     palette='viridis',
+#     # capsize=0.1
+# )
 
-# Adjust y-axis limits to make space for annotations
-ax.set_ylim(0, ax.get_ylim()[1] * 1.2)
+# # Adjust y-axis limits to make space for annotations
+# ax.set_ylim(0, ax.get_ylim()[1] * 1.2)
 
-# Rotate x-axis labels for better readability
-plt.xticks(rotation=45)
+# # Rotate x-axis labels for better readability
+# plt.xticks(rotation=45)
 
-# Annotate significance
-from itertools import product
+# # Annotate significance
+# from itertools import product
 
-# Create a mapping of measures to x-axis positions
+# # Create a mapping of measures to x-axis positions
 measure_names = stat_data['measure'].unique()
 measure_positions = {measure: idx for idx, measure in enumerate(measure_names)}
 
@@ -548,6 +550,90 @@ hue_offsets = {hue: idx - 1 for idx, hue in enumerate(hue_levels)}
 # Bar width based on number of hue levels
 bar_width = 0.8 / len(hue_levels)
 
+# for _, row in test_results_df.iterrows():
+#     measure = row['Measure']
+#     significance = row['significance']
+
+#     # Skip if not significant
+#     if significance == 'ns':
+#         continue
+
+#     # Get x positions for both conditions
+#     x_base = measure_positions[measure]
+#     x1 = x_base + hue_offsets[hue_levels[0]] * bar_width + bar_width / 2 -0.15
+#     x2 = x_base + hue_offsets[hue_levels[1]] * bar_width + bar_width / 2 +0.15
+
+#     # Get y positions (top of the error bars)
+#     y1 = stat_data[(stat_data['measure'] == measure) & (stat_data['type'] == hue_levels[0])]['score'].mean()
+#     y1_err = stats.sem(stat_data[(stat_data['measure'] == measure) & (stat_data['type'] == hue_levels[0])]['score']) * 1.96
+#     y2 = stat_data[(stat_data['measure'] == measure) & (stat_data['type'] == hue_levels[1])]['score'].mean()
+#     y2_err = stats.sem(stat_data[(stat_data['measure'] == measure) & (stat_data['type'] == hue_levels[1])]['score']) * 1.96
+
+#     max_y = max(y1 + y1_err, y2 + y2_err)
+
+#     # Height for the significance line
+#     h = ax.get_ylim()[1] * 0.02
+#     y = max_y + h + 0.2
+
+#     # Draw the significance line
+#     ax.plot([x1 , x1, x2, x2], [y - h, y, y, y - h], lw=1.5, c='k')
+
+#     # Add the significance text
+#     ax.text((x1 + x2) / 2, y + h, significance, ha='center', va='bottom', color='k', fontsize=12)
+
+# # Enhance plot aesthetics
+# plt.title('Comparison of Non-Distractor vs Distractor Conditions')
+# plt.xlabel('Measure')
+# plt.ylabel('Mean Score')
+# plt.legend(title='Condition')
+# plt.tight_layout()
+# plt.show()
+
+
+
+# Calculate Median and Quartile Deviation (QD)
+mean_std_summary = stat_data.groupby(['measure', 'type']).agg(
+    Mean=('score', 'mean'),
+    Std=('score', 'std'),
+    Median=('score', 'median'),
+    Q1=('score', lambda x: np.percentile(x, 25)),
+    Q3=('score', lambda x: np.percentile(x, 75))
+).reset_index()
+
+# Calculate Quartile Deviation (QD)
+mean_std_summary['QD'] = (mean_std_summary['Q3'] - mean_std_summary['Q1']) / 2
+
+# Display the summary table with Mean, Std, Median, and QD
+mean_std_summary = mean_std_summary[['measure', 'type','Median', 'QD']]
+
+# Display the summary table
+print("=== Mean and Standard Deviation for Each Measure and Condition ===")
+print(mean_std_summary.to_string(index=False))
+
+
+
+# Adjust the code to set significance notations higher than the boxplot ranges
+
+# Set up the plot
+plt.figure(figsize=(12, 8))
+
+# Create the boxplot
+ax = sns.boxplot(
+    x='measure',
+    y='score',
+    hue='type',
+    data=stat_data,
+    palette='viridis',
+    gap= 0.01
+)
+
+# Adjust y-axis limits to make space for annotations
+ax.set_ylim(0, ax.get_ylim()[1] * 1.4)  # Increase the y-limit for higher significance annotations
+
+# Rotate x-axis labels for better readability
+plt.xticks(rotation=45)
+
+# Annotate significance
 for _, row in test_results_df.iterrows():
     measure = row['Measure']
     significance = row['significance']
@@ -558,8 +644,8 @@ for _, row in test_results_df.iterrows():
 
     # Get x positions for both conditions
     x_base = measure_positions[measure]
-    x1 = x_base + hue_offsets[hue_levels[0]] * bar_width + bar_width / 2 -0.15
-    x2 = x_base + hue_offsets[hue_levels[1]] * bar_width + bar_width / 2 +0.15
+    x1 = x_base + hue_offsets[hue_levels[0]] * bar_width + bar_width / 2 - 0.15
+    x2 = x_base + hue_offsets[hue_levels[1]] * bar_width + bar_width / 2 + 0.15
 
     # Get y positions (top of the error bars)
     y1 = stat_data[(stat_data['measure'] == measure) & (stat_data['type'] == hue_levels[0])]['score'].mean()
@@ -569,15 +655,15 @@ for _, row in test_results_df.iterrows():
 
     max_y = max(y1 + y1_err, y2 + y2_err)
 
-    # Height for the significance line
-    h = ax.get_ylim()[1] * 0.02
-    y = max_y + h + 0.2
+    # Height for the significance line, placed higher than before
+    h = ax.get_ylim()[1] * 0.03  # Adjust the height of the significance line
+    y = max_y + h + 0.4  # Increase the spacing for the significance line
 
     # Draw the significance line
-    ax.plot([x1 , x1, x2, x2], [y - h, y, y, y - h], lw=1.5, c='k')
+    ax.plot([x1, x1, x2, x2], [8 - h, 8, 8, 8 - h], lw=1.5, c='k')
 
     # Add the significance text
-    ax.text((x1 + x2) / 2, y + h, significance, ha='center', va='bottom', color='k', fontsize=12)
+    ax.text((x1 + x2) / 2, 8 + h, significance, ha='center', va='bottom', color='k', fontsize=12)
 
 # Enhance plot aesthetics
 plt.title('Comparison of Non-Distractor vs Distractor Conditions')
@@ -587,13 +673,3 @@ plt.legend(title='Condition')
 plt.tight_layout()
 plt.show()
 
-
-
-mean_std_summary = stat_data.groupby(['measure', 'type']).agg(
-    Mean=('score', 'mean'),
-    Std=('score', 'std')
-).reset_index()
-
-# Display the summary table
-print("=== Mean and Standard Deviation for Each Measure and Condition ===")
-print(mean_std_summary.to_string(index=False))
